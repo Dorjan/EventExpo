@@ -1,0 +1,27 @@
+<!--mostro annunci creati -->
+
+<script></script>
+<br/><br/>
+<h4>Eventi creati</h4>
+<hr>
+{{#each mieieventi}}
+<div class="card card-body mb-2">
+  <img src={{immagine}}  width = "200" height = "200" alt="Denim Jeans" style="width:100%">
+  <h1>{{titolo}}</h1>
+  <p class="price">prezzo euro {{prezzo}}</p>
+  <p>{{descrizione}}</p>
+  <a href="/eventi/modifica_evento/{{id}}" class="btn btn-primary btn-block mb-2">
+      <i class="fa fa-pencil"></i> Edit event
+    </a>
+    <form method="post" action="/eventi/{{id}}?_method=DELETE" id="delete-form" >
+      <input type="hidden" name="_method" value="DELETE">
+      <button type="submit" class="btn btn-danger btn-block" value="Delete">
+        <i class="fa fa-trash"></i> Delete
+      </button>
+    </form>
+</div>
+
+
+{{else}}
+  <p>No events found</p>
+{{/each}}
