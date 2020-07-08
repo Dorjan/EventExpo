@@ -11,7 +11,7 @@
     font-size: 22px;
   }
   
-  .card button {
+  /*.card button {
     border: none;
     outline: 0;
     padding: 12px;
@@ -26,6 +26,7 @@
   #reset{
     background-color:blue;
   }
+  */
   
   
   .card button:hover {

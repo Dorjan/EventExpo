@@ -62,24 +62,27 @@ router.post('/ricerca', ensureAuthenticated, (req,res) => {
 
 
 
-
-// annunci route
+// eventi route
 router.get('/mieiEventi', ensureAuthenticated, (req,res) => {
   //trova gli annunci creati dall'utente
 
    Evento.find({
     creatore: req.user.id
     })
-    .populate('eventi')
     .then(mieieventi => {
-      console.log("annunci registrati");
-      res.render('eventi/mieiEventi', {
-          mieieventi:mieieventi
-      });
+
+      utente.findOne({
+        _id:req.user.id
+      })
+      .populate('eventi')
+      .then(utentetrovato => {
+        res.render('eventi/mieiEventi', {
+          mieieventi:mieieventi,
+          eventsjoined: utentetrovato.eventi
+        });
+      })
     })
 });
-
-
 
 
 // Crea evento route
@@ -177,7 +180,10 @@ const res =  geocoder.geocode('29 champs elysée paris');
     nuovoEvento.creatore = req.user.id;
     nuovoEvento.immagine = req.body.immagine;
     nuovoEvento.indirizzo = req.body.indirizzo;
-    nuovoEvento.citta = req.body.citta;
+    var stringa = req.body.indirizzo;
+    var n = stringa.indexOf(",");
+    var result = stringa.substring(n+1);
+    nuovoEvento.citta = result;
 
     
     
