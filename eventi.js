@@ -134,40 +134,7 @@ router.post('/crea_Evento',(req,res) => {
   } else{
 
 
-    
-    /*var imageFile = req.file.filename;
-    console.log(req.file.path);
-    console.log(imageFile);
-    //console.log(req.file);
-    //var success = req.file.filename+ "caricato correttamente";
-    //var image = fs.readFileSync(req.file.path);
-    //console.log(image);
-    //var type = 'image/png';
-    //crea l'oggetto annuncio
-    */
-   /*
-const options = {
-  provider: 'mapquest',
-  httpAdapter: 'https',
-  apiKey: 'Mbr9QG9PWZm1a256AGHD5NY4f5Gv0XVx',
-  formatter: null
 
-};
-
-const  geocoder = NodeGeocoder(options);
-const res =  geocoder.geocode('29 champs elysée paris');
- console.log(res);
-
-
-*/
-
-
-
-
-
-    //console.log(req.body.indirizzo.toString());
-    //const loc =  geocoder.geocode('29 champs elysée paris');
-    //console.log(loc);
 
     const nuovoEvento = new Evento();
     /*nuovoEvento.luogo = {
@@ -248,14 +215,6 @@ router.put('/:id',(req, res) => {
           descrizione: req.body.descrizione,
         });
       } else {
-        //var imageFile = req.body.file.filename;
-        //console.log(req.file.path);
-        //console.log(imageFile);
-        //var image = fs.readFileSync(req.body.file.path);
-        //console.log(image);
-        //var type = 'image/png';
-
-        //update values
         evento.categoria = req.body.categoria;
         evento.titolo = req.body.titolo;
         evento.descrizione = req.body.descrizione;
