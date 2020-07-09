@@ -129,50 +129,8 @@ router.post('/crea_Evento',(req,res) => {
       descrizione: req.body.descrizione,
     });
   } else{
-
-
-    
-    /*var imageFile = req.file.filename;
-    console.log(req.file.path);
-    console.log(imageFile);
-    //console.log(req.file);
-    //var success = req.file.filename+ "caricato correttamente";
-    //var image = fs.readFileSync(req.file.path);
-    //console.log(image);
-    //var type = 'image/png';
-    //crea l'oggetto annuncio
-    */
-   /*
-const options = {
-  provider: 'mapquest',
-  httpAdapter: 'https',
-  apiKey: 'Mbr9QG9PWZm1a256AGHD5NY4f5Gv0XVx',
-  formatter: null
-
-};
-
-const  geocoder = NodeGeocoder(options);
-const res =  geocoder.geocode('29 champs elysée paris');
- console.log(res);
-
-
-*/
-
-
-
-
-
-    //console.log(req.body.indirizzo.toString());
-    //const loc =  geocoder.geocode('29 champs elysée paris');
-    //console.log(loc);
-
     const nuovoEvento = new Evento();
-    /*nuovoEvento.luogo = {
-      type: 'Point',
-      coordinate : [loc[0].longitude, loc[0].latitude],
-      indirizzo_formattato: loc[0].formattedAddress
-    }
-    */
+   
     nuovoEvento.categoria= req.body.categoria;
     nuovoEvento.titolo =  req.body.titolo;
     nuovoEvento.descrizione =  req.body.descrizione;
@@ -329,6 +287,55 @@ router.put('/partecipa/:id', (req, res) => {
 
 
 
+//abbandona evento
+
+//abbandona l'evento
+
+router.put('/delete/:id', (req, res) => {
+  // cancellare l'utente nella lista partecipanti
+  Evento.findOne({
+    _id: req.params.id
+    })
+  
+    .then(evento => {
+      evento.partecipanti.pull(req.user.id);
+
+      //to delete also in the user (events) list
+      utente.findOne({
+          _id: req.user.id
+        })
+        .then(user => {
+          //to send a notify to event's creator una notifica all'utente cha ha aggiunto
+          utente.findOne({
+            _id: evento.creatore._id
+          })
+          .then(user2 => {
+            // Send a notify to event's creator
+            if(user._id.toString() != evento.creatore._id.toString()){
+              amqp.connect(keys.amqpURI, function(err, conn) {
+                conn.createChannel(function(err, ch) {
+                  var ex = 'notify';
+                  var key = user2.email;
+                  var msg = req.user.nome + " " + req.user.cognome + " ha abbandonato il tuo evento" + evento.titolo + "'";
+                  ch.assertExchange(ex, 'topic', {durable: false});
+                  ch.publish(ex, key, new Buffer.from(msg));
+                });
+                setTimeout(function() { conn.close();}, 500);
+              });
+            }
+          user.eventi.pull(evento);
+          user.save();
+        });
+
+        });
+
+      evento.save()
+        .then(evento => {
+          req.flash('error_msg', 'Evento abbandonato');
+          res.redirect('/eventi/mieiEventi');
+        });
+    });
+});
 
 
 
