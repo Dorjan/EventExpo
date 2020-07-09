@@ -22,3 +22,12 @@
     border-color: transparent; 
     color: #007BFF !important; 
   }
+
+  .btn-primary{
+    background-color: #dc3545;
+  }
+
+ .btn-danger{
+   background-color:blue;
+
+  }

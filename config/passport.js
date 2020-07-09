@@ -45,7 +45,9 @@ new DropboxOAuth2Strategy({
     dropboxID: profile.id,
     firstName: profile.name.givenName,
     lastName: profile.name.familyName,
-    email: profile.emails[0].value
+    email: profile.emails[0].value,
+    info: true,
+    ruolo: "gestore"
   }
 
   // Check for existing user
@@ -57,7 +59,7 @@ new DropboxOAuth2Strategy({
       done(null, user);
     } else {
       // Create user
-      new User(newUser)
+      new Utente(newUser)
         .save()
         .then(user => done(null, user));
     }
@@ -80,6 +82,8 @@ new GoogleStrategy({
     nome: profile.name.givenName,
     cognome: profile.name.familyName,
     email: profile.emails[0].value,
+    info: true,
+    ruolo:"gestore"
   }
 
   // Check for existing user
@@ -91,7 +95,7 @@ new GoogleStrategy({
       done(null, user);
     } else {
       // Create user
-      new User(newUser)
+      new Utente(newUser)
         .save()
         .then(user => done(null, user));
     }
