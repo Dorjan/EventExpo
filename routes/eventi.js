@@ -133,6 +133,7 @@ router.post('/crea_Evento',(req,res) => {
     nuovoEvento.categoria= req.body.categoria;
     nuovoEvento.titolo =  req.body.titolo;
     nuovoEvento.descrizione =  req.body.descrizione;
+    console.log(req.body.time);
     nuovoEvento.data =  req.body.data + ' ' + req.body.time;
     nuovoEvento.creatore = req.user.id;
     nuovoEvento.immagine = req.body.immagine;
@@ -254,7 +255,7 @@ router.put('/partecipa/:id', (req, res) => {
       })
       .then(user => {
         if (user.eventi.indexOf(evento._id) != -1){
-          req.flash('error_msg', 'Already joined');
+          req.flash('error_msg', "Partecipi già all'evento");
           res.redirect('/eventi/mieiEventi');
         } else {
           //to add in both user (events) list and event (joiners) list
@@ -287,7 +288,7 @@ router.put('/partecipa/:id', (req, res) => {
 
           evento.save()
             .then(evento => {
-              req.flash('success_msg', 'Event joined');
+              req.flash('success_msg', "Ti sei unito all'evento");
               res.redirect('/eventi/mieiEventi');
             });
         }

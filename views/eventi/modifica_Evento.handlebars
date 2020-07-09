@@ -29,18 +29,18 @@
         <table>
         <tr>
           <td>
-            <label for="date">Date</label>
+            <label for="date">Data</label>
           </td>
           <td>
-            <label for="time">Time</label>
+            <label for="time">Ora</label>
           </td>
         </tr>
         <tr>
           <td>
-            <input type="date" class="form-control" name="data" value="{{evento.data}}" >
+            <input type="date" class="form-control" name="data" value="{{formatDate evento.data 'YYYY-MM-DD'}}" >
           </td>
           <td>
-            <input type="time" class="form-control" name="time" value="{{evento.data}}" >
+            <input type="time" class="form-control" name="time" value="{{formatDate evento.data 'HH:mm'}}" >
           </td>
         </tr>
       </table>

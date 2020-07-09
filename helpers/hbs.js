@@ -6,7 +6,7 @@ module.exports = {
     return input.replace(/<(?:.|\n)*?>/gm, '');
   },
   //to make dates looks better
-  formatDate: function(date, format){
-    return moment(date).format(format);
+  formatDate: function(data, format){
+    return moment(data).format(format);
   }
 };
