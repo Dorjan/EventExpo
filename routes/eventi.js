@@ -5,7 +5,6 @@ const Evento = mongoose.model('eventi');
 const utente = mongoose.model('utenti');
 const {ensureAuthenticated} = require('../helpers/auth');
 const path = require('path');
-//const multer = require('multer');
 const fs = require('fs');
 const amqp = require('amqplib/callback_api');
 const keys = require('../config/keys.js');
@@ -62,24 +61,27 @@ router.post('/ricerca', ensureAuthenticated, (req,res) => {
 
 
 
-
-// annunci route
+// eventi route
 router.get('/mieiEventi', ensureAuthenticated, (req,res) => {
   //trova gli annunci creati dall'utente
 
    Evento.find({
     creatore: req.user.id
     })
-    .populate('eventi')
     .then(mieieventi => {
-      console.log("annunci registrati");
-      res.render('eventi/mieiEventi', {
-          mieieventi:mieieventi
-      });
+
+      utente.findOne({
+        _id:req.user.id
+      })
+      .populate('eventi')
+      .then(utentetrovato => {
+        res.render('eventi/mieiEventi', {
+          mieieventi:mieieventi,
+          eventsjoined: utentetrovato.eventi
+        });
+      })
     })
 });
-
-
 
 
 // Crea evento route
@@ -126,58 +128,20 @@ router.post('/crea_Evento',(req,res) => {
       descrizione: req.body.descrizione,
     });
   } else{
-
-
-    
-    /*var imageFile = req.file.filename;
-    console.log(req.file.path);
-    console.log(imageFile);
-    //console.log(req.file);
-    //var success = req.file.filename+ "caricato correttamente";
-    //var image = fs.readFileSync(req.file.path);
-    //console.log(image);
-    //var type = 'image/png';
-    //crea l'oggetto annuncio
-    */
-   /*
-const options = {
-  provider: 'mapquest',
-  httpAdapter: 'https',
-  apiKey: 'Mbr9QG9PWZm1a256AGHD5NY4f5Gv0XVx',
-  formatter: null
-
-};
-
-const  geocoder = NodeGeocoder(options);
-const res =  geocoder.geocode('29 champs elysée paris');
- console.log(res);
-
-
-*/
-
-
-
-
-
-    //console.log(req.body.indirizzo.toString());
-    //const loc =  geocoder.geocode('29 champs elysée paris');
-    //console.log(loc);
-
     const nuovoEvento = new Evento();
-    /*nuovoEvento.luogo = {
-      type: 'Point',
-      coordinate : [loc[0].longitude, loc[0].latitude],
-      indirizzo_formattato: loc[0].formattedAddress
-    }
-    */
+   
     nuovoEvento.categoria= req.body.categoria;
     nuovoEvento.titolo =  req.body.titolo;
     nuovoEvento.descrizione =  req.body.descrizione;
+    console.log(req.body.time);
     nuovoEvento.data =  req.body.data + ' ' + req.body.time;
     nuovoEvento.creatore = req.user.id;
     nuovoEvento.immagine = req.body.immagine;
     nuovoEvento.indirizzo = req.body.indirizzo;
-    nuovoEvento.citta = req.body.citta;
+    var stringa = req.body.indirizzo;
+    var n = stringa.indexOf(",");
+    var result = stringa.substring(n+1);
+    nuovoEvento.citta = result;
 
     
     
@@ -192,7 +156,7 @@ const res =  geocoder.geocode('29 champs elysée paris');
         conn.createChannel(function(err, ch) {
           var ex = 'notify';
           var key = "all";
-          var msg = "The event '"+ req.body.titolo + "' has been created";
+          var msg = "L'evento'"+ req.body.titolo + "' è stato creato";
           console.log(msg);
           ch.assertExchange(ex, 'topic', {durable: false});
           ch.publish(ex, key, new Buffer.from(msg));
@@ -228,7 +192,6 @@ router.put('/:id',(req, res) => {
         errors.push({text:'aggiungi una descrizione'});
       }
       console.log(req.body.titolo);
-      console.log(req.params.titolo);
       console.log(errors);
       console.log("___________________");
       console.log(req.body.descrizione);
@@ -240,20 +203,32 @@ router.put('/:id',(req, res) => {
           descrizione: req.body.descrizione,
         });
       } else {
-        //var imageFile = req.body.file.filename;
-        //console.log(req.file.path);
-        //console.log(imageFile);
-        //var image = fs.readFileSync(req.body.file.path);
-        //console.log(image);
-        //var type = 'image/png';
-
-        //update values
         evento.categoria = req.body.categoria;
         evento.titolo = req.body.titolo;
         evento.descrizione = req.body.descrizione;
         evento.venditore = req.user.id;        
         evento.data = req.body.data + ' ' + req.body.time;
         evento.immagine = req.body.immagine;
+
+        for(i = 0; i < evento.partecipanti.length; i++){
+          utente.findOne({
+            _id: evento.partecipanti[i]._id
+          }).then(user => {
+            if(user._id.toString() != evento.creatore._id.toString()){
+              // Send a notify to all joiners
+              amqp.connect(keys.amqpURI, function(err, conn) {
+                conn.createChannel(function(err, ch) {
+                  var ex = 'notify';
+                  var key = user.email;
+                  var msg = "L'evento '" + req.body.descrizione + "' è stato modificato";
+                  ch.assertExchange(ex, 'topic', {durable: false});
+                  ch.publish(ex, key, new Buffer.from(msg));
+                });
+                setTimeout(function() { conn.close();}, 500);
+              });
+            }
+          });
+        }
 
 
         evento.save()
@@ -280,7 +255,7 @@ router.put('/partecipa/:id', (req, res) => {
       })
       .then(user => {
         if (user.eventi.indexOf(evento._id) != -1){
-          req.flash('error_msg', 'Already joined');
+          req.flash('error_msg', "Partecipi già all'evento");
           res.redirect('/eventi/mieiEventi');
         } else {
           //to add in both user (events) list and event (joiners) list
@@ -313,7 +288,7 @@ router.put('/partecipa/:id', (req, res) => {
 
           evento.save()
             .then(evento => {
-              req.flash('success_msg', 'Event joined');
+              req.flash('success_msg', "Ti sei unito all'evento");
               res.redirect('/eventi/mieiEventi');
             });
         }
@@ -323,6 +298,55 @@ router.put('/partecipa/:id', (req, res) => {
 
 
 
+//abbandona evento
+
+//abbandona l'evento
+
+router.put('/delete/:id', (req, res) => {
+  // cancellare l'utente nella lista partecipanti
+  Evento.findOne({
+    _id: req.params.id
+    })
+  
+    .then(evento => {
+      evento.partecipanti.pull(req.user.id);
+
+      //to delete also in the user (events) list
+      utente.findOne({
+          _id: req.user.id
+        })
+        .then(user => {
+          //to send a notify to event's creator una notifica all'utente cha ha aggiunto
+          utente.findOne({
+            _id: evento.creatore._id
+          })
+          .then(user2 => {
+            // Send a notify to event's creator
+            if(user._id.toString() != evento.creatore._id.toString()){
+              amqp.connect(keys.amqpURI, function(err, conn) {
+                conn.createChannel(function(err, ch) {
+                  var ex = 'notify';
+                  var key = user2.email;
+                  var msg = req.user.nome + " " + req.user.cognome + " ha abbandonato il tuo evento" + evento.titolo + "'";
+                  ch.assertExchange(ex, 'topic', {durable: false});
+                  ch.publish(ex, key, new Buffer.from(msg));
+                });
+                setTimeout(function() { conn.close();}, 500);
+              });
+            }
+          user.eventi.pull(evento);
+          user.save();
+        });
+
+        });
+
+      evento.save()
+        .then(evento => {
+          req.flash('error_msg', 'Evento abbandonato');
+          res.redirect('/eventi/mieiEventi');
+        });
+    });
+});
 
 
 

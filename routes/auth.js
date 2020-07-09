@@ -69,6 +69,14 @@ router.post('/registrazione', (req, res) => {
           req.flash('error_msg', 'Email già usata');
           res.redirect('/auth/iscriviti');
         } else{
+          var role;
+          if (req.body.ruolo == "gestore"){
+            role = true;
+          }
+          else{
+            role = false;
+          }
+          console.log(role);
           const newUser = new User({
             nome: req.body.nome,
             cognome: req.body.cognome,
@@ -76,7 +84,7 @@ router.post('/registrazione', (req, res) => {
             password: req.body.password,
             ruolo: req.body.ruolo,
             regione: req.body.regione,
-            info: true,     
+            info: role,     
           });
           bcrypt.genSalt(10, (err,salt) => {			//password crypting 
             bcrypt.hash(newUser.password, salt, (err, hash) => { //(salt is additional input to a function that hashes data)

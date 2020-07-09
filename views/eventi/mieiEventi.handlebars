@@ -3,9 +3,10 @@
 <!--mostro eventi a cui partecipo -->
 {{#each eventsjoined}}
   <div class="card card-body mb-2">
+    <img src={{immagine}}  width = "200" height = "200" alt="Denim Jeans" style="width:100%">
     <h4 align="center">{{titolo}}</h4>
-    <p><b>Data:</b> {{formatDate date 'MMMM Do YYYY'}}</p>
-    <p><b>Ora:</b> {{formatDate date 'HH:mm'}}</p>
+    <p><b>Data:</b> {{formatDate data 'MMMM Do YYYY'}}</p>
+    <p><b>Ora:</b> {{formatDate data 'HH:mm'}}</p>
     <p><b>descrizione:</b>  {{descrizione}}</p>
     <hr/>
     <a href="/eventi/show/{{id}}" class="btn btn-dark btn-block mb-2">more...</a>
@@ -34,12 +35,12 @@
   <p class="price">prezzo euro {{prezzo}}</p>
   <p>{{descrizione}}</p>
   <a href="/eventi/modifica_evento/{{id}}" class="btn btn-primary btn-block mb-2">
-      <i class="fa fa-pencil"></i> Edit event
+      <i class="fa fa-pencil"></i> Modifica
     </a>
     <form method="post" action="/eventi/{{id}}?_method=DELETE" id="delete-form" >
       <input type="hidden" name="_method" value="DELETE">
       <button type="submit" class="btn btn-danger btn-block" value="Delete">
-        <i class="fa fa-trash"></i> Delete
+        <i class="fa fa-trash"></i> Cancella
       </button>
     </form>
 </div>

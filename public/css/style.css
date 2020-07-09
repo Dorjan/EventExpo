@@ -1,58 +1,33 @@
-/*
-.my-nav{
-    background-color: red;
-}
+.navbar { 
+    margin-bottom: 0; 
+    background-color: #dc3545; 
+    z-index: 9999; 
+    border: 0; 
+    font-size: 12px !important; 
+    line-height: 1.42857143 !important; 
+    letter-spacing: 4px; 
+    border-radius: 0; 
+  } 
+   
+  .navbar li a, .navbar .navbar-brand { 
+    color: #fff !important; 
+  } 
+   
+  .navbar-nav li a:hover, .navbar-nav li.active a { 
+    color: #fff !important; 
+    background-color: #dc3545 !important; 
+  } 
+   
+  .navbar-default .navbar-toggle { 
+    border-color: transparent; 
+    color: #007BFF !important; 
+  }
 
-.nav-link{
-    color: white;
-}
+  .btn-primary{
+    background-color: #dc3545;
+  }
 
-.navbar-brand{
-    color: white;
-}
+ .btn-danger{
+   background-color:blue;
 
-#categorie_annuncio{
-    width: 220px;
-}
-
-#descrizione {
-    height: 228px;
-    width: 500px;
-    resize: none;
-
-}
-
-
-#more{
-    color:white;
-    background-color: red;
-}
-
-input {
-    width:100px;
-    height:20px;
-    vertical-align:top;
-}
-
-select {
-    border:1px solid #ccc;
-    vertical-align:top;
-    height:40px;
-}
-option {
-    color:red;
-    width:100px;
-    text-decoration:underline;
-}
-
-
-input, select, textarea {
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-}
-*/
-
-.nav-user{
-    text-transform: capitalize;
-}
+  }
