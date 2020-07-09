@@ -5,7 +5,6 @@ const Evento = mongoose.model('eventi');
 const utente = mongoose.model('utenti');
 const {ensureAuthenticated} = require('../helpers/auth');
 const path = require('path');
-//const multer = require('multer');
 const fs = require('fs');
 const amqp = require('amqplib/callback_api');
 const keys = require('../config/keys.js');
@@ -156,7 +155,7 @@ router.post('/crea_Evento',(req,res) => {
         conn.createChannel(function(err, ch) {
           var ex = 'notify';
           var key = "all";
-          var msg = "The event '"+ req.body.titolo + "' has been created";
+          var msg = "L'evento'"+ req.body.titolo + "' è stato creato";
           console.log(msg);
           ch.assertExchange(ex, 'topic', {durable: false});
           ch.publish(ex, key, new Buffer.from(msg));
@@ -192,7 +191,6 @@ router.put('/:id',(req, res) => {
         errors.push({text:'aggiungi una descrizione'});
       }
       console.log(req.body.titolo);
-      console.log(req.params.titolo);
       console.log(errors);
       console.log("___________________");
       console.log(req.body.descrizione);
@@ -204,20 +202,32 @@ router.put('/:id',(req, res) => {
           descrizione: req.body.descrizione,
         });
       } else {
-        //var imageFile = req.body.file.filename;
-        //console.log(req.file.path);
-        //console.log(imageFile);
-        //var image = fs.readFileSync(req.body.file.path);
-        //console.log(image);
-        //var type = 'image/png';
-
-        //update values
         evento.categoria = req.body.categoria;
         evento.titolo = req.body.titolo;
         evento.descrizione = req.body.descrizione;
         evento.venditore = req.user.id;        
         evento.data = req.body.data + ' ' + req.body.time;
         evento.immagine = req.body.immagine;
+
+        for(i = 0; i < evento.partecipanti.length; i++){
+          utente.findOne({
+            _id: evento.partecipanti[i]._id
+          }).then(user => {
+            if(user._id.toString() != evento.creatore._id.toString()){
+              // Send a notify to all joiners
+              amqp.connect(keys.amqpURI, function(err, conn) {
+                conn.createChannel(function(err, ch) {
+                  var ex = 'notify';
+                  var key = user.email;
+                  var msg = "L'evento '" + req.body.descrizione + "' è stato modificato";
+                  ch.assertExchange(ex, 'topic', {durable: false});
+                  ch.publish(ex, key, new Buffer.from(msg));
+                });
+                setTimeout(function() { conn.close();}, 500);
+              });
+            }
+          });
+        }
 
 
         evento.save()
