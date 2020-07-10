@@ -68,7 +68,7 @@ io.on('connection', function(socket){
     console.log("dentro al notify");
     console.log(data);
       if(data != ''){
-        amqp.connect(keys.ampqURI, function(err, conn) {
+        amqp.connect(keys.amqpURI, function(err, conn) {
           conn.createChannel(function(err, ch) {
           var ex = 'notify';
               ch.assertExchange(ex, 'topic', {durable: false});
@@ -93,7 +93,7 @@ io.on('connection', function(socket){
   // Download all prev messages
   socket.on('chatstart', function(data){
     if(data != ''){
-      amqp.connect(keys.ampqURI, function(err, conn) {
+      amqp.connect(keys.amqpURI, function(err, conn) {
         conn.createChannel(function(err, ch) {
         var ex = 'chat';
             ch.assertExchange(ex, 'topic', {durable: false});
@@ -116,7 +116,7 @@ io.on('connection', function(socket){
   socket.on('chat', function(msg){
     io.emit('chat', msg);
     // Send chat message to the main queue
-    amqp.connect(keys.ampqURI, function(err, conn) {
+    amqp.connect(keys.amqpURI, function(err, conn) {
       conn.createChannel(function(err, ch) {
         var ex = 'chat';
         var key = 'chat';
