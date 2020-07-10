@@ -23,11 +23,24 @@
     color: #007BFF !important; 
   }
 
-  .btn-primary{
+  #submit{
     background-color: #dc3545;
+    border-color: #dc3545;
   }
+ #dropbox{
+   background-color: #007bff;
 
+ }
  .btn-danger{
    background-color:blue;
 
   }
+  #reset{
+    background-color: #007bff;
+    border-color: #007bff;
+
+  }
+#google{
+  background-color: #dc3545;
+
+}

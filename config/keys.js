@@ -5,8 +5,8 @@ module.exports = {
     mongoDB : 'mongodb+srv://Marco:Marco.141995@progetto-lemgb.mongodb.net/test?retryWrites=true&w=majority',
     
     ampqURI: 'amqp://localhost:5672/',
-
-
+    
+    
     google: {
         clientID: '413007659635-pk9p5ufpcaemj6da63aft19p9i508pg6.apps.googleusercontent.com',
         clientSecret: 'dF0lmZ4PtcE7BDdXJe-Mlaz1'
