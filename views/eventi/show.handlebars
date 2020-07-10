@@ -6,11 +6,11 @@
     <div id="map-container" style='width: 460px; height: 300px;' class="map-container z-depth-1-half"></div>
   <input type = "hidden" id = "mappa" value = "{{evento.luogo.coordinate.[0]}}"  />
    <input type = "hidden" id = "secondo" value = "{{evento.luogo.coordinate.[1]}}"  />
-  <h4 align="center">{{evento.luogo.coordinate.[0]}}</h4>
+  <h4 align="center">{{evento.titolo}}</h4>
   <p>descrizione</p>
   <p>{{evento.descrizione}}</p>
-  <p><b>Data:</b> {{ formatDate evento.data 'MMMM Do YYYY'}}</p>
-  <p><b>Ora:</b> {{ formatDate evento.data 'HH:mm'}}</p>
+  <p><b>Data:</b> {{formatDate evento.data 'MMMM Do YYYY'}}</p>
+  <p><b>Ora:</b> {{formatDate evento.data 'HH:mm'}}</p>
   <p id="mappa"><b>luogo:</b>  {{evento.luogo.coordinate.[1]}}</p>
   
 
@@ -18,7 +18,7 @@
   {{#if user}}
     <form action="/eventi/partecipa/{{evento.id}}?_method=PUT" method="post">
       <input type="hidden" name="_method" value="PUT">
-      <button type="submit" class="btn btn-primary btn-block" value="Partecipa">
+      <button type="submit" id="partecipa" class="btn btn-primary btn-block" value="Partecipa">
         Partecipa
       </button>
     </form>

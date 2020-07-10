@@ -26,7 +26,7 @@
 
   
 
-  #submit{
+  #submit,#cancella,#more,#partecipa,#abbandona{
     background-color: #dc3545;
     border-color: #dc3545;
   }
@@ -38,11 +38,12 @@
    background-color:blue;
 
   }
-  #reset{
+  #reset,#modifica,#info{
     background-color: #007bff;
     border-color: #007bff;
 
   }
+
 
 
 #google{
