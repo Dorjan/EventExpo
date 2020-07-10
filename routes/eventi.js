@@ -47,7 +47,7 @@ router.post('/ricerca', ensureAuthenticated, (req,res) => {
     //console.log(req.user.annunci);
     
     
-   Evento.find({$and :[{citta: req.body.citta },{categoria: req.body.categoria},{venditore:{ $ne: req.user}}]})
+   Evento.find({$and :[{citta: req.body.citta },{categoria: req.body.categoria},{creatore:{ $ne: req.user}}]})
     .populate('eventi')
     .then(eventi_trovati => {
       console.log("eventi cercati");
