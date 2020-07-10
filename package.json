@@ -4,7 +4,7 @@
   "description": "progetto di esempio",
   "main": "server.js",
   "scripts": {
-    "test": "node app.js"
+    "test": "npm start"
   },
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.3",
