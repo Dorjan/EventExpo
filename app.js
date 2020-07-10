@@ -10,6 +10,17 @@ const flash = require('connect-flash');
 const amqp = require('amqplib/callback_api');
 const app = express();
 
+const Handlebars = require('handlebars')
+const expressHandlebars = require('express-handlebars');
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
+ 
+//const app = express();
+ 
+app.engine('handlebars', expressHandlebars({
+    handlebars: allowInsecurePrototypeAccess(Handlebars)
+}));
+app.set('view engine', 'handlebars');
+
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
