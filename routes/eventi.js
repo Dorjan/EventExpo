@@ -223,8 +223,8 @@ router.put('/:id',(req, res) => {
                   var msg = "L'evento '" + req.body.descrizione + "' è stato modificato";
                   ch.assertExchange(ex, 'topic', {durable: false});
                   ch.publish(ex, key, new Buffer.from(msg));
+                  setTimeout(function() { conn.close();}, 500);
                 });
-                setTimeout(function() { conn.close();}, 500);
               });
             }
           });
