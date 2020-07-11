@@ -1,48 +1,52 @@
-.navbar { 
-    margin-bottom: 0; 
-    background-color: #dc3545; 
-    z-index: 9999; 
-    border: 0; 
-    font-size: 12px !important; 
-    line-height: 1.42857143 !important; 
-    letter-spacing: 4px; 
-    border-radius: 0; 
-} 
-   
-.navbar li a, .navbar .navbar-brand { 
-  color: #fff !important; 
-} 
-   
-.navbar-nav li a:hover, .navbar-nav li.active a { 
-  color: #fff !important; 
-  background-color: #dc3545 !important; 
-} 
-   
-.navbar-default .navbar-toggle { 
-  border-color: transparent; 
-  color: #007BFF !important; 
+.my-nav{
+    background-color: red;
+}
+
+.nav-link{
+    color: white;
+}
+
+.navbar-brand{
+    color: white;
+}
+
+#categorie_annuncio{
+    width: 220px;
+}
+
+#descrizione {
+    height: 228px;
+    width: 500px;
+    resize: none;
+
 }
 
 
-#submit,#cancella,#more,#partecipa,#abbandona,#conferma{
-  background-color: #dc3545;
-  border-color: #dc3545;
+#more{
+    color:white;
+    background-color: red;
 }
 
-#dropbox{
-  background-color: #007bff;
-
+input {
+    width:100px;
+    height:20px;
+    vertical-align:top;
 }
 
-.btn-danger{
-  background-color:#007bff;
-
+select {
+    border:1px solid #ccc;
+    vertical-align:top;
+    height:40px;
 }
-#reset,#modifica,#info,#cerca{
-  background-color: #007bff;
-  border-color: #007bff;
+option {
+    color:red;
+    width:100px;
+    text-decoration:underline;
 }
 
-#google{
-  background-color: #dc3545;
+
+input, select, textarea {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }

@@ -1,7 +1,7 @@
 <div class="row mb-6">
   <div class="col-md-8 mx-auto">
     <div class="card card-body">
-      <form action="/events/ricerca" method="post">
+      <form action="/eventi/ricerca" method="post">
         <div class="form-group">
           <label >Cosa cerchi?</label>
           <input type="text" name="titolo" class="form-control" value="{{titolo}}" required>
@@ -14,7 +14,7 @@
           <label for="luogo">Dove</label>
           <input id = "citta" type="text" name="citta" class="form-control" value="{{citta}}" required>
         </div>
-        <button type="submit" id="cerca"  class="btn btn-primary">Cerca</button>
+        <button type="submit" class="btn btn-primary">Cerca</button>
       </form>
     </div>
       <script>

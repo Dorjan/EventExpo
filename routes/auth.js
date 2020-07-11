@@ -3,12 +3,13 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const router = express.Router();
+
 const {ensureAuthenticated} = require('../helpers/auth');
 
 
 //load user module
-require('../models/User');
-const User = mongoose.model('users');
+require('../models/Utente');
+const User = mongoose.model('utenti');
 
 //log-in routes
 router.get('/login', (req,res) =>{
@@ -25,11 +26,12 @@ router.get('/iscriviti', (req,res) =>{
 
 //user page routes
 router.get('/userPage', ensureAuthenticated, (req,res) =>{
-  res.render('auth/userPage');
+  res.render('auth/paginaUtente');
 });
 
 
-// login form
+//form di log in
+
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
     successRedirect: '/welcome',
@@ -61,21 +63,45 @@ router.post('/registrazione', (req, res) => {
       regione: req.body.regione
       //password cleared
     });
-  } else {
+  } else{
     User.findOne({email: req.body.email})       //to check if email already in
       .then(user =>{
         if(user){
           req.flash('error_msg', 'Email già usata');
           res.redirect('/auth/iscriviti');
         } else{
-          var role;
-          if (req.body.ruolo == "gestore"){
-            role = true;
+          //console.log(req.body.ruolo.value);
+          console.log(req.body.ruolo);
+            if (req.body.ruolo == "utente"){
+
+              const newUser = new User({
+              nome: req.body.nome,
+              cognome: req.body.cognome,
+              email: req.body.email,
+              password: req.body.password,
+              ruolo: req.body.ruolo,
+              regione: req.body.regione,
+              info: true,
+              
+            });
+              bcrypt.genSalt(10, (err,salt) => {			//password crypting 
+                bcrypt.hash(newUser.password, salt, (err, hash) => { //(salt is additional input to a function that hashes data)
+                  if(err) throw err;                          
+                  newUser.password = hash; 
+                  newUser.save()
+                    .then(user => {
+                      console.log("registrazione ok");
+                      req.flash('success_msg', 'You are now registered, please log-in');
+                      res.redirect('/auth/login');
+                    })
+                    .catch(err => {
+                      console.log(err);
+                      return;
+                    })
+                });
+              });
           }
           else{
-            role = false;
-          }
-          console.log(role);
           const newUser = new User({
             nome: req.body.nome,
             cognome: req.body.cognome,
@@ -83,34 +109,42 @@ router.post('/registrazione', (req, res) => {
             password: req.body.password,
             ruolo: req.body.ruolo,
             regione: req.body.regione,
-            info: role,     
+            info: false,
           });
-          bcrypt.genSalt(10, (err,salt) => {			//password crypting 
-            bcrypt.hash(newUser.password, salt, (err, hash) => { //(salt is additional input to a function that hashes data)
-              if(err) throw err;                          
-              newUser.password = hash; 
-              newUser.save()
-                .then(user => {
-                  req.flash('success_msg', 'Non sei registrato, prego fai il log-in');
-                  res.redirect('/auth/login');
-                })
-                .catch(err => {
-                  console.log(err);
-                  return;
-                })
+            bcrypt.genSalt(10, (err,salt) => {			//password crypting 
+              bcrypt.hash(newUser.password, salt, (err, hash) => { //(salt is additional input to a function that hashes data)
+                if(err) throw err;                          
+                newUser.password = hash; 
+                newUser.save()
+                  .then(user => {
+                    console.log("registrazione ok");
+                    req.flash('success_msg', 'You are now registered, please log-in');
+                    res.redirect('/auth/login');
+                  })
+                  .catch(err => {
+                    console.log(err);
+                    return;
+                  })
               });
             });
-          }
-        });
-      }
-  });
-  
-  
-// auth with dropbox
-router.get('/dropbox', 
-          passport.authenticate('dropbox-oauth2'));
+          } 
+         
+        }
+      });
+  }
+});
 
-// return from authenticate
+
+// logout utente
+router.get('/logout', (req, res) => {
+  req.logout();
+  req.flash('success_msg', 'Logged out')
+  res.redirect('/auth/login');
+});
+
+// auth with dropbox
+router.get('/dropbox', passport.authenticate('dropbox-oauth2'));
+
 router.get('/dropbox/callback', 
     passport.authenticate('dropbox-oauth2', {
         successRedirect:'/welcome', 
@@ -118,23 +152,30 @@ router.get('/dropbox/callback',
     })
 );
 
-
 // auth with google
-router.get('/google', passport.authenticate('google', { scope: ['profile','email'] }));
+router.get('/google', passport.authenticate('google', {
+  scope: ['profile','email']
+}));
 
 // callback route for google to redirect to
-router.get('/google/redirect', 
-  passport.authenticate('google',  {
-    successRedirect: '/welcome',
-    failureRedirect: '/auth/login'  
-  })
-);
-
-// logout utente
-router.get('/logout', (req, res) => {
-  req.logout();
-  req.flash('success_msg', 'Logged out');
-  res.redirect('/auth/login');
+router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
+  // handle with passport
+  //res.send(req.user);
+  res.redirect('/welcome');
 });
+
+/*
+//GOOGLE authentication
+router.get('/google', passport.authenticate('google', {scope: ['profile', 'email']}));
+
+//return from authenticate
+router.get('/google/callback',
+  passport.authenticate('google', {
+    successRedirect : '/welcome',
+    failureRedirect: '/auth/login'
+    })
+  );
+
+*/
 
 module.exports = router;
