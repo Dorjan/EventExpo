@@ -4,8 +4,8 @@ module.exports = {
 
     mongoDB : 'mongodb+srv://Marco:Marco.141995@progetto-lemgb.mongodb.net/test?retryWrites=true&w=majority',
     
-    //amqpURI: 'amqp://fnqvktyp:lerr2SFOaWU-rlsurI4NH0XL5ohsg-JL@roedeer.rmq.cloudamqp.com/fnqvktyp', 
-    amqpURI: 'amqp://localhost:5672/',
+    amqpURI: 'amqp://fnqvktyp:lerr2SFOaWU-rlsurI4NH0XL5ohsg-JL@roedeer.rmq.cloudamqp.com/fnqvktyp', 
+    //amqpURI: 'amqp://localhost:5672/',
     
     google: {
         clientID: '413007659635-pk9p5ufpcaemj6da63aft19p9i508pg6.apps.googleusercontent.com',
