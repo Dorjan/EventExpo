@@ -29,8 +29,8 @@ module.exports = function(passport){
           } else {
             return done(null, false, {message: 'Password sbagliata'});
           }
-        })
-      })
+        });
+      });
     }));
 
 
@@ -84,7 +84,7 @@ passport.use('dropbox-oauth2',
             nome: profile.name.givenName,
             cognome: profile.name.familyName,
             email: profile.emails[0].value
-        }
+        };
 
         // Check for existing user
         Utente.findOne({
@@ -99,7 +99,7 @@ passport.use('dropbox-oauth2',
                 .save()
                 .then(user => done(null, user));
             }
-        })
+        });
     })
 );
 
@@ -131,9 +131,7 @@ passport.use(
                   done(null, newUser);
               });
           }
-      });
-
-      
+      });   
   })
 );
 
@@ -146,4 +144,4 @@ passport.use(
             done(err, user);
         });
     });
-}
+};

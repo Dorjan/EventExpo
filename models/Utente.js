@@ -19,11 +19,11 @@ const UserSchema = new Schema({
 mongoose.model('utenti', UserSchema);
 
 UserSchema.methods.IsGestore = function(){
-  return (this.ruolo === "gestore")
-}
+  return (this.ruolo === "gestore");
+};
 
 UserSchema.methods.IsUtente= function(){
-  return (this.ruolo === "utente")
-}
+  return (this.ruolo === "utente");
+};
 
 mongoose.model('utenti', UserSchema);
