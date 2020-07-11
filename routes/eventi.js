@@ -5,7 +5,6 @@ const Evento = mongoose.model('eventi');
 const utente = mongoose.model('utenti');
 const {ensureAuthenticated} = require('../helpers/auth');
 const path = require('path');
-//const multer = require('multer');
 const fs = require('fs');
 const amqp = require('amqplib/callback_api');
 const keys = require('../config/keys.js');
@@ -43,11 +42,12 @@ router.post('/ricerca', ensureAuthenticated, (req,res) => {
     console.log(req.user);
     console.log(req.body.titolo);
     //console.log(req.body.descrizione);
+    console.log(req.body.indirizzo);
     console.log(req.body.categoria);
     //console.log(req.user.annunci);
     
     
-   Evento.find({$and :[{citta: req.body.citta },{categoria: req.body.categoria},{venditore:{ $ne: req.user}}]})
+   Evento.find({$and :[{citta: req.body.citta },{categoria: req.body.categoria},{creatore:{ $ne: req.user}}]})
     .populate('eventi')
     .then(eventi_trovati => {
       console.log("eventi cercati");
@@ -61,8 +61,7 @@ router.post('/ricerca', ensureAuthenticated, (req,res) => {
 
 
 
-
-// annunci route
+// eventi route
 router.get('/mieiEventi', ensureAuthenticated, (req,res) => {
   //trova gli annunci creati dall'utente
 
@@ -83,8 +82,6 @@ router.get('/mieiEventi', ensureAuthenticated, (req,res) => {
       })
     })
 });
-
-
 
 
 // Crea evento route
@@ -131,14 +128,12 @@ router.post('/crea_Evento',(req,res) => {
       descrizione: req.body.descrizione,
     });
   } else{
-
-
-
-
     const nuovoEvento = new Evento();
+   
     nuovoEvento.categoria= req.body.categoria;
     nuovoEvento.titolo =  req.body.titolo;
     nuovoEvento.descrizione =  req.body.descrizione;
+    console.log(req.body.time);
     nuovoEvento.data =  req.body.data + ' ' + req.body.time;
     nuovoEvento.creatore = req.user.id;
     nuovoEvento.immagine = req.body.immagine;
@@ -161,7 +156,7 @@ router.post('/crea_Evento',(req,res) => {
         conn.createChannel(function(err, ch) {
           var ex = 'notify';
           var key = "all";
-          var msg = "The event '"+ req.body.titolo + "' has been created";
+          var msg = "L'evento'"+ req.body.titolo + "' è stato creato";
           console.log(msg);
           ch.assertExchange(ex, 'topic', {durable: false});
           ch.publish(ex, key, new Buffer.from(msg));
@@ -225,7 +220,7 @@ router.put('/:id',(req, res) => {
                 conn.createChannel(function(err, ch) {
                   var ex = 'notify';
                   var key = user.email;
-                  var msg = "The event '" + req.body.descrizione + "' has been edited";
+                  var msg = "L'evento '" + req.body.descrizione + "' è stato modificato";
                   ch.assertExchange(ex, 'topic', {durable: false});
                   ch.publish(ex, key, new Buffer.from(msg));
                 });
@@ -260,7 +255,7 @@ router.put('/partecipa/:id', (req, res) => {
       })
       .then(user => {
         if (user.eventi.indexOf(evento._id) != -1){
-          req.flash('error_msg', 'Already joined');
+          req.flash('error_msg', "Partecipi già all'evento");
           res.redirect('/eventi/mieiEventi');
         } else {
           //to add in both user (events) list and event (joiners) list
@@ -279,7 +274,7 @@ router.put('/partecipa/:id', (req, res) => {
                 conn.createChannel(function(err, ch) {
                   var ex = 'notify';
                   var key = user2.email;
-                  var msg = req.user.nome + " " + req.user.cognome + " has joined your event '" + evento.descrizione + "'";
+                  var msg = req.user.nome + " " + req.user.cognome + " has joined your event '" + evento.titolo + "'";
                   console.log(msg);
                   ch.assertExchange(ex, 'topic', {durable: false});
                   ch.publish(ex, key, new Buffer.from(msg));
@@ -293,7 +288,7 @@ router.put('/partecipa/:id', (req, res) => {
 
           evento.save()
             .then(evento => {
-              req.flash('success_msg', 'Event joined');
+              req.flash('success_msg', "Ti sei unito all'evento");
               res.redirect('/eventi/mieiEventi');
             });
         }
@@ -302,6 +297,8 @@ router.put('/partecipa/:id', (req, res) => {
 });
 
 
+
+//abbandona evento
 
 //abbandona l'evento
 
@@ -357,8 +354,8 @@ router.put('/delete/:id', (req, res) => {
 
 
 
+
 //rimuovere evento
-//delete event
 router.delete('/:id', (req, res) => {
 
   Evento.findOne({
@@ -376,8 +373,7 @@ router.delete('/:id', (req, res) => {
                 conn.createChannel(function(err, ch) {
                   var ex = 'notify';
                   var key = user.email;
-                  var msg = "ATTENTION: the event '" + evento.descrizione + "' that you're joined has been canceled";
-                  console.log(key);
+                  var msg = "ATTENTION: the event '" + evento.titolo + "' that you're joined has been canceled";
                   console.log(msg);
                   ch.assertExchange(ex, 'topic', {durable: false});
                   ch.publish(ex, key, new Buffer.from(msg));
@@ -397,11 +393,11 @@ router.delete('/:id', (req, res) => {
         _id: req.params.id
         })
         .then(evento => {
-          req.flash('error_msg', 'evento rimosso');
+          req.flash('error_msg', 'Evento rimosso');
           res.redirect('/eventi/mieiEventi');
-
         });
     });
+ 
 });
 
 module.exports = router;
