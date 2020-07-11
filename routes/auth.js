@@ -7,8 +7,8 @@ const {ensureAuthenticated} = require('../helpers/auth');
 
 
 //load user module
-require('../models/Utente');
-const User = mongoose.model('utenti');
+require('../models/User');
+const User = mongoose.model('users');
 
 //log-in routes
 router.get('/login', (req,res) =>{
@@ -25,12 +25,11 @@ router.get('/iscriviti', (req,res) =>{
 
 //user page routes
 router.get('/userPage', ensureAuthenticated, (req,res) =>{
-  res.render('auth/paginaUtente');
+  res.render('auth/userPage');
 });
 
 
-//form di log in
-
+// login form
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
     successRedirect: '/welcome',
@@ -92,7 +91,7 @@ router.post('/registrazione', (req, res) => {
               newUser.password = hash; 
               newUser.save()
                 .then(user => {
-                  req.flash('success_msg', 'You are now registered, please log-in');
+                  req.flash('success_msg', 'Non sei registrato, prego fai il log-in');
                   res.redirect('/auth/login');
                 })
                 .catch(err => {
@@ -108,7 +107,8 @@ router.post('/registrazione', (req, res) => {
   
   
 // auth with dropbox
-router.get('/dropbox', passport.authenticate('dropbox-oauth2'));
+router.get('/dropbox', 
+          passport.authenticate('dropbox-oauth2'));
 
 // return from authenticate
 router.get('/dropbox/callback', 
@@ -133,7 +133,7 @@ router.get('/google/redirect',
 // logout utente
 router.get('/logout', (req, res) => {
   req.logout();
-  req.flash('success_msg', 'Logged out')
+  req.flash('success_msg', 'Logged out');
   res.redirect('/auth/login');
 });
 

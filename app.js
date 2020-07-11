@@ -2,45 +2,31 @@ const express = require('express');// carico modulo express
 const path = require('path');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');  //per accedere ai campi della form
+const methodOverride = require('method-override'); 
+const flash = require('connect-flash');
+const session = require('express-session'); // necessario per flash
 const mongoose = require('mongoose');    //database
 const passport = require('passport'); 
-const methodOverride = require('method-override'); 
-const session = require('express-session'); // necessario per flash
-const flash = require('connect-flash');
 const amqp = require('amqplib/callback_api');
+
 const app = express();
-
-const Handlebars = require('handlebars')
-const expressHandlebars = require('express-handlebars');
-const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
- 
-//const app = express();
- 
-app.engine('handlebars', expressHandlebars({
-    handlebars: allowInsecurePrototypeAccess(Handlebars)
-}));
-app.set('view engine', 'handlebars');
-
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 
-
-
-//carico moduli
-require('./models/Utente');
-require('./models/Evento');
+// load user model
+require('./models/User');
+require('./models/Event');
 
 
 //configurazione passport
 require('./config/passport')(passport);
 
 
-
 //carico le routes
 const index = require('./routes/index');
 const auth = require('./routes/auth');
-const eventi = require('./routes/eventi');
+const events = require('./routes/events');
 const chat = require('./routes/chat');
 
 //load keys
@@ -55,9 +41,6 @@ const {
 
 
 
-
-
-
 /********************************************************************************************************/
 /*                     WebSocket and AMQP connection to handle CHAT and NOTIFIES                        */
 /********************************************************************************************************/
@@ -65,8 +48,6 @@ io.on('connection', function(socket){
 
   // Handle notify event
   socket.on('notify', function(data){
-    console.log("dentro al notify");
-    console.log(data);
       if(data != ''){
         amqp.connect(keys.amqpURI, function(err, conn) {
           conn.createChannel(function(err, ch) {
@@ -81,7 +62,7 @@ io.on('connection', function(socket){
                   ch.consume(q.queue, function(msg) {
                     console.log("......."+ data);
                     io.emit(data, msg.content.toString());
-                    console.log(" [x] %s", msg.content.toString());
+                    //console.log(" [x] %s", msg.content.toString());
                   }, {noAck: true});
               });
           });
@@ -134,22 +115,9 @@ io.on('connection', function(socket){
 
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*********************************************************************************************************
+**********************************************************************************************************
+**********************************************************************************************************/
 
 
 // Map global promise - get rid of warning
@@ -161,8 +129,7 @@ mongoose.connect(keys.mongoDB, {
     .then(() => console.log('MongoDb Connected..'))      //use promise instead of callbacks for cleaner code
     .catch(err => console.log(err));
 
-
-    
+// handlebars middleware
 app.engine('handlebars',exphbs({ 
   helpers:{
     stripTags: stripTags,
@@ -173,14 +140,13 @@ app.engine('handlebars',exphbs({
 app.set('view engine','handlebars');
 
 
-
 //body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
+// method override middleware
 app.use(methodOverride('_method'));
-
-
 
 
 //express session middleware
@@ -198,6 +164,8 @@ app.use(passport.session());
 
 //flash middleware
 app.use(flash());
+
+
 // Set global vars (for navbar and error messages)
 app.use(function(req, res, next){
   res.locals.success_msg = req.flash('success_msg');
@@ -208,25 +176,19 @@ app.use(function(req, res, next){
 });
 
 
-
-
-
-
-//app.use(express.static('images'));
-
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/',index); // uso la route.
-app.use('/auth',auth); // uso la route.
-app.use('/eventi',eventi);
-app.use('/chat',chat); //uso la route
+// use routes
+app.use('/', index); // uso la route.
+app.use('/auth', auth); // uso la route.
+app.use('/events', events);
+app.use('/chat', chat); //uso la route
 
 
 const port = process.env.PORT || 3000;
 
-http.listen(port,()=>{
+http.listen(port, ()=>{
     console.log(`Server è partito su porta ${port}`);
 });
 

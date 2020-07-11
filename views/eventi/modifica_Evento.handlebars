@@ -1,11 +1,11 @@
 <div class="card card-body">
   <h3 class="text-center">Modifica Evento</h3>
-  <form action="/eventi/{{evento.id}}?_method=PUT" method="post">
+  <form action="/event/{{event.id}}?_method=PUT" method="post">
     <input type="hidden" name="_method" value="PUT">
     
         <div class="form-group">
           <label for="categoria">Categoria:</label>
-          <select id="categoria_annuncio" name="categoria" value = "{{evento.categoria}}">
+          <select id="categoria_annuncio" name="categoria" value = "{{event.categoria}}">
             <option value="concerti">concerti</option>
             <option value="mostre">mostre</option>
             <option value="teatro">teatro</option>
@@ -15,16 +15,16 @@
         </div>
         <div class="form-group">
           <label for="titolo">Titolo</label>
-          <input type="text" name="titolo" class="form-control" value="{{evento.titolo}}" required>
+          <input type="text" name="titolo" class="form-control" value="{{event.titolo}}" required>
         </div>
         <div class="form-group">
           <label for = "descrizione">Descrizione</label>
-          <textarea  class = "form-control" name="descrizione" placeholder="scrivi qui il testo">{{evento.descrizione}}
+          <textarea  class = "form-control" name="descrizione" placeholder="scrivi qui il testo">{{event.descrizione}}
           </textarea>      
         </div>
         <div class="form-group">
          <label for="img">Iserisci link immagine:</label>
-         <input type="text" id="img" name="immagine" value="{{evento.immagine}}">
+         <input type="text" id="img" name="immagine" value="{{event.immagine}}">
         </div>
         <table>
         <tr>
@@ -37,10 +37,10 @@
         </tr>
         <tr>
           <td>
-            <input type="date" class="form-control" name="data" value="{{formatDate evento.data 'YYYY-MM-DD'}}" >
+            <input type="date" class="form-control" name="data" value="{{formatDate event.data 'YYYY-MM-DD'}}" >
           </td>
           <td>
-            <input type="time" class="form-control" name="time" value="{{formatDate evento.data 'HH:mm'}}" >
+            <input type="time" class="form-control" name="time" value="{{formatDate event.data 'HH:mm'}}" >
           </td>
         </tr>
       </table>

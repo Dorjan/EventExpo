@@ -10,7 +10,7 @@ const UserSchema = new Schema({
   dropboxId:              { type: String, required: false },
   password:               { type: String, required: false },
   regione:                 { type: String,required: false },
-  eventi:                 [{ type: Schema.Types.ObjectId, ref:'eventi'}],
+  events:                 [{ type: Schema.Types.ObjectId, ref:'events'}],
   ruolo:                  { type: String,required: false },
   info:                   { type: Boolean,required: false },
   data:                   { type: Date, default: Date.now}
@@ -18,11 +18,11 @@ const UserSchema = new Schema({
 
 
 UserSchema.methods.IsGestore = function(){
-  return (this.ruolo === "gestore")
-}
+  return (this.ruolo === "gestore");
+};
 
 UserSchema.methods.IsUtente= function(){
-  return (this.ruolo === "utente")
-}
+  return (this.ruolo === "utente");
+};
 
-mongoose.model('utenti', UserSchema);
+mongoose.model('users', UserSchema);

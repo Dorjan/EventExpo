@@ -1,39 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
-const Evento = mongoose.model('eventi');
-const utente = mongoose.model('utenti');
+const Event = mongoose.model('events');
+const User = mongoose.model('users');
 const {ensureAuthenticated} = require('../helpers/auth');
-const path = require('path');
-const fs = require('fs');
+//const path = require('path');
+//const fs = require('fs');
 const amqp = require('amqplib/callback_api');
 const keys = require('../config/keys.js');
 //const geocoder = require('../utils/geocoder');
 //const keys = require('../config/keys.js');
 const NodeGeocoder = require('node-geocoder');
  
-
- 
-
-
-
-
-
-
-
-// Show Single event
-router.get('/show/:id', (req, res) => {
-  Evento.findOne({
-    _id: req.params.id
-    })
-    .populate('creatore')     //to access creator info
-    .then(evento => {
-      res.render('eventi/show', {
-        evento:evento
-      });
-    });
-});
-
 
 
 // route ricerca annunci
@@ -61,57 +39,79 @@ router.post('/ricerca', ensureAuthenticated, (req,res) => {
 
 
 
-// eventi route
+// My events route
 router.get('/mieiEventi', ensureAuthenticated, (req,res) => {
   //trova gli annunci creati dall'utente
-
-   Evento.find({
+  Event.find({
     creatore: req.user.id
     })
+    .sort({dateCreation: 'desc'})
     .then(mieieventi => {
 
-      utente.findOne({
+      User.findOne({
         _id:req.user.id
       })
-      .populate('eventi')
+      .populate('events')
       .then(utentetrovato => {
-        res.render('eventi/mieiEventi', {
+        
+        // render both
+        res.render('events/mieiEventi', {
           mieieventi:mieieventi,
-          eventsjoined: utentetrovato.eventi
+          eventsjoined: utentetrovato.events
         });
-      })
-    })
+      });
+    });
 });
 
 
-// Crea evento route
+// Create event route
 router.get('/crea_Evento',ensureAuthenticated,(req,res) => {
-  res.render('eventi/crea_Evento');
-})
+  res.render('events/crea_Evento');
+});
 
+// Show Single event
+router.get('/show/:id', (req, res) => {
+  Event.findOne({
+    _id: req.params.id
+    })
+    .populate('creatore')     //to access creator info
+    .then(event => {
+      res.render('events/show', {
+        event:event
+      });
+    });
+});
 
-//rindirizzo alla form di edit dell'annuncio
+// List events form a user
+router.get('/user/:userId', (req, res) => {
+  Event.find({
+    creatore: req.params.userId
+    })
+    .then(events => {
+      res.render('events/userEvents', {
+        events: events
+      });
+    });
+});
 
+// Edit event form
 router.get('/modifica_Evento/:id', ensureAuthenticated, (req,res) => {
   Evento.findOne({
     _id: req.params.id
     })
-    .then(evento => {
-      res.render('eventi/modifica_Evento', {
-        evento: evento
+    .then(event => {
+      res.render('events/modifica_Evento', {
+        event: event
       });
     });
-})
+});
 
 
-//upload
-// aggiunta di un annuncio
+// Process add event
 router.post('/crea_Evento',(req,res) => {
-  
   
   let errors = [];
 
-  //console.log(req.body.file);
   //server side validation
   if(!req.body.categoria){
     errors.push({text:'scegli una categoria '});
@@ -119,40 +119,40 @@ router.post('/crea_Evento',(req,res) => {
   if(!req.body.titolo){
     errors.push({text:'scegli un titolo'});
   }
-  console.log(errors);
+
   if(errors.length > 0){
-    res.render('eventi/crea_Evento', {
+    res.render('events/crea_Evento', {
       errors: errors,
       categoria: req.body.categoria,
       titolo: req.body.titolo,
       descrizione: req.body.descrizione,
     });
   } else{
-    const nuovoEvento = new Evento();
+    
+    const newEvent = new Event();
    
-    nuovoEvento.categoria= req.body.categoria;
-    nuovoEvento.titolo =  req.body.titolo;
-    nuovoEvento.descrizione =  req.body.descrizione;
+    newEvent.categoria= req.body.categoria;
+    newEvent.titolo =  req.body.titolo;
+    newEvent.descrizione =  req.body.descrizione;
     console.log(req.body.time);
-    nuovoEvento.data =  req.body.data + ' ' + req.body.time;
-    nuovoEvento.creatore = req.user.id;
-    nuovoEvento.immagine = req.body.immagine;
-    nuovoEvento.indirizzo = req.body.indirizzo;
+    newEvent.data =  req.body.data + ' ' + req.body.time;
+    newEvent.creatore = req.user.id;
+    newEvent.immagine = req.body.immagine;
+    newEvent.indirizzo = req.body.indirizzo;
     var stringa = req.body.indirizzo;
     var n = stringa.indexOf(",");
     var result = stringa.substring(n+1);
-    nuovoEvento.citta = result;
+    newEvent.citta = result;
 
     
     
-    nuovoEvento.save().then(evento => {
+    newEvent.save().then(event => {
         console.log("evento creato");
         req.user.save();
-        res.redirect('/eventi/mieiEventi');
+        res.redirect('/events/mieiEventi');
       })
-      console.log("sono qui");
-          // Send a notify to all users
-      amqp.connect(keys.ampqURI,function(err,conn){
+      // Send a notify to all users
+      amqp.connect(keys.amqpURI,function(err,conn){
         conn.createChannel(function(err, ch) {
           var ex = 'notify';
           var key = "all";
@@ -163,20 +163,15 @@ router.post('/crea_Evento',(req,res) => {
         });
         setTimeout(function() { conn.close();}, 500);
       });
-  }
+    }
 });
 
-
-
-
-
-//modifica dell'annuncio
-
+// edit form process
 router.put('/:id',(req, res) => {
-  Evento.findOne({
+  Event.findOne({
     _id: req.params.id
     })
-    .then(evento => {
+    .then(event => {
       let errors = [];
       
       console.log(req.body.categoria);
@@ -195,26 +190,28 @@ router.put('/:id',(req, res) => {
       console.log(errors);
       console.log("___________________");
       console.log(req.body.descrizione);
+
       if(errors.length > 0){
-        res.render('eventi/crea_Evento', {
+        res.render('events/crea_Evento', {
           errors: errors,
           categoria: req.body.categoria,
           titolo: req.body.titolo,
           descrizione: req.body.descrizione,
         });
       } else {
-        evento.categoria = req.body.categoria;
-        evento.titolo = req.body.titolo;
-        evento.descrizione = req.body.descrizione;
-        evento.venditore = req.user.id;        
-        evento.data = req.body.data + ' ' + req.body.time;
-        evento.immagine = req.body.immagine;
 
-        for(i = 0; i < evento.partecipanti.length; i++){
-          utente.findOne({
-            _id: evento.partecipanti[i]._id
+        event.categoria = req.body.categoria;
+        event.titolo = req.body.titolo;
+        event.descrizione = req.body.descrizione;
+        event.venditore = req.user.id;        
+        event.data = req.body.data + ' ' + req.body.time;
+        event.immagine = req.body.immagine;
+
+        for(i = 0; i < event.partecipanti.length; i++){
+          User.findOne({
+            _id: event.partecipanti[i]._id
           }).then(user => {
-            if(user._id.toString() != evento.creatore._id.toString()){
+            if(user._id.toString() != event.creatore._id.toString()){
               // Send a notify to all joiners
               amqp.connect(keys.amqpURI, function(err, conn) {
                 conn.createChannel(function(err, ch) {
@@ -231,65 +228,62 @@ router.put('/:id',(req, res) => {
         }
 
 
-        evento.save()
-        .then(evento => {
+        event.save()
+        .then(event => {
           req.flash('success_msg', 'Evento aggiornato');
-          res.redirect('/eventi/mieiEventi');
+          res.redirect('/events/mieiEventi');
         })
       }
     });
 });
 
 
-
-//partecipa all'evento
+// Join event process
 router.put('/partecipa/:id', (req, res) => {
   console.log("sto cercando l'evento");
   Evento.findOne({
     _id: req.params.id
     })
-    .then(evento => {
+    .then(event => {
       //check if already joined
-      utente.findOne({
+      User.findOne({
         _id: req.user.id
       })
       .then(user => {
-        if (user.eventi.indexOf(evento._id) != -1){
+        if (user.events.indexOf(event._id) != -1){
           req.flash('error_msg', "Partecipi già all'evento");
-          res.redirect('/eventi/mieiEventi');
+          res.redirect('/events/mieiEventi');
         } else {
           //to add in both user (events) list and event (joiners) list
-          evento.partecipanti.push(req.user.id);
-          user.eventi.unshift(evento);
+          event.partecipanti.push(req.user.id);
+          user.events.unshift(event);
           user.save();
 
           //to send a notify to event's creator
           utente.findOne({
-            _id: evento.creatore._id
+            _id: event.creatore._id
           })
           .then(user2 => {
-            if(user._id.toString() != evento.creatore._id.toString()){
+            if(user._id.toString() != event.creatore._id.toString()){
               // Send a notify to event's creator
-              amqp.connect(keys.ampqURI, function(err, conn) {
+              amqp.connect(keys.amqpURI, function(err, conn) {
                 conn.createChannel(function(err, ch) {
                   var ex = 'notify';
                   var key = user2.email;
-                  var msg = req.user.nome + " " + req.user.cognome + " has joined your event '" + evento.titolo + "'";
+                  var msg = req.user.nome + " " + req.user.cognome + " has joined your event '" + event.titolo + "'";
                   console.log(msg);
                   ch.assertExchange(ex, 'topic', {durable: false});
                   ch.publish(ex, key, new Buffer.from(msg));
                 });
                 setTimeout(function() { conn.close();}, 500);
               });
-
-              
             }
           });
 
-          evento.save()
-            .then(evento => {
+          event.save()
+            .then(event => {
               req.flash('success_msg', "Ti sei unito all'evento");
-              res.redirect('/eventi/mieiEventi');
+              res.redirect('/events/mieiEventi');
             });
         }
       });
@@ -297,83 +291,73 @@ router.put('/partecipa/:id', (req, res) => {
 });
 
 
-
-//abbandona evento
-
-//abbandona l'evento
-
+// leave event process
 router.put('/delete/:id', (req, res) => {
-  // cancellare l'utente nella lista partecipanti
-  Evento.findOne({
+  // delete user in event (partecipanti) list
+  Event.findOne({
     _id: req.params.id
     })
   
-    .then(evento => {
-      evento.partecipanti.pull(req.user.id);
+    .then(event => {
+      event.partecipanti.pull(req.user.id);
 
       //to delete also in the user (events) list
-      utente.findOne({
+      User.findOne({
           _id: req.user.id
         })
         .then(user => {
           //to send a notify to event's creator una notifica all'utente cha ha aggiunto
-          utente.findOne({
-            _id: evento.creatore._id
+          User.findOne({
+            _id: event.creatore._id
           })
           .then(user2 => {
             // Send a notify to event's creator
-            if(user._id.toString() != evento.creatore._id.toString()){
+            if(user._id.toString() != event.creatore._id.toString()){
               amqp.connect(keys.amqpURI, function(err, conn) {
                 conn.createChannel(function(err, ch) {
                   var ex = 'notify';
                   var key = user2.email;
-                  var msg = req.user.nome + " " + req.user.cognome + " ha abbandonato il tuo evento" + evento.titolo + "'";
+                  var msg = req.user.nome + " " + req.user.cognome + " ha abbandonato il tuo evento" + event.titolo + "'";
                   ch.assertExchange(ex, 'topic', {durable: false});
                   ch.publish(ex, key, new Buffer.from(msg));
                 });
                 setTimeout(function() { conn.close();}, 500);
               });
             }
-          user.eventi.pull(evento);
+          user.events.pull(event);
           user.save();
         });
 
         });
 
-      evento.save()
-        .then(evento => {
+      event.save()
+        .then(event => {
           req.flash('error_msg', 'Evento abbandonato');
-          res.redirect('/eventi/mieiEventi');
+          res.redirect('/events/mieiEventi');
         });
     });
 });
 
 
-
-
-
-
-
-
-//rimuovere evento
+// delete event
 router.delete('/:id', (req, res) => {
 
-  Evento.findOne({
+  Event.findOne({
     _id: req.params.id
-    }).then(evento =>{
-      if(evento.partecipanti.length > 0){
+    }).then(event =>{
+      if(event.partecipanti.length > 0){
 
-        for(i = 0; i < evento.partecipanti.length; i++){
-          utente.findOne({
-            _id: evento.partecipanti[i]._id
+        for(i = 0; i < event.partecipanti.length; i++){
+          User.findOne({
+            _id: event.partecipanti[i]._id
           }).then(user => {
-            if(user._id.toString() != evento.creatore._id.toString()){
+            if(user._id.toString() != event.creatore._id.toString()){
               // Send a notify to all joiners
               amqp.connect(keys.amqpURI, function(err, conn) {
                 conn.createChannel(function(err, ch) {
                   var ex = 'notify';
                   var key = user.email;
-                  var msg = "ATTENTION: the event '" + evento.titolo + "' that you're joined has been canceled";
+                  var msg = "ATTENTION: the event '" + event.titolo + "' that you're joined has been canceled";
                   console.log(msg);
                   ch.assertExchange(ex, 'topic', {durable: false});
                   ch.publish(ex, key, new Buffer.from(msg));
@@ -383,18 +367,18 @@ router.delete('/:id', (req, res) => {
               });
             }
             //to delete also in the user (events) list
-            user.eventi.pull(evento);
+            user.events.pull(event);
             user.save();
           })
         }
       }
     }).then(() =>{
-      Evento.deleteOne({
+      Event.deleteOne({
         _id: req.params.id
         })
-        .then(evento => {
+        .then(event => {
           req.flash('error_msg', 'Evento rimosso');
-          res.redirect('/eventi/mieiEventi');
+          res.redirect('/events/mieiEventi');
         });
     });
  
