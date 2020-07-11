@@ -4,7 +4,7 @@ module.exports = {
 
     mongoDB : 'mongodb+srv://Marco:Marco.141995@progetto-lemgb.mongodb.net/test?retryWrites=true&w=majority',
     
-    ampqURI: 'amqps://fnqvktyp:lerr2SFOaWU-rlsurI4NH0XL5ohsg-JL@roedeer.rmq.cloudamqp.com/fnqvktyp',
+    amqpURI: 'amqps://fnqvktyp:lerr2SFOaWU-rlsurI4NH0XL5ohsg-JL@roedeer.rmq.cloudamqp.com/fnqvktyp',
     //ampqURI: 'amqps://localhost:5672/',
 
 
