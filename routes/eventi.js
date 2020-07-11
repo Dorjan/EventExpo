@@ -152,7 +152,7 @@ router.post('/crea_Evento',(req,res) => {
       })
       console.log("sono qui");
           // Send a notify to all users
-      amqp.connect(keys.ampqURI,function(err,conn){
+      amqp.connect(keys.amqpURI,function(err,conn){
         conn.createChannel(function(err, ch) {
           var ex = 'notify';
           var key = "all";
@@ -270,7 +270,7 @@ router.put('/partecipa/:id', (req, res) => {
           .then(user2 => {
             if(user._id.toString() != evento.creatore._id.toString()){
               // Send a notify to event's creator
-              amqp.connect(keys.ampqURI, function(err, conn) {
+              amqp.connect(keys.amqpURI, function(err, conn) {
                 conn.createChannel(function(err, ch) {
                   var ex = 'notify';
                   var key = user2.email;
