@@ -5,7 +5,7 @@
 #title{
     font-size: 18px;
     padding: 10px 20px;
-    color: red;
+    color: #dc3545;
 }
 
 #simple-chat{
@@ -59,14 +59,14 @@ input{
 }
 
 #send{
-    background: red;
+    background: #dc3545;
     color: #fff;
     font-size: 18px;
     border: 0;
     padding: 12px 0;
     width: 100%;
     border-radius: 0 0 2px 2px;
-    border-color:red;
+    border-color:#dc3545;
 }
 
 #handle{
