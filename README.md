@@ -25,3 +25,4 @@ L'applicazione può essere eseguita tramite Docker
 ***
 Realizzato da
 Dorjan Hysa
+Marco Pennacchia
