@@ -220,7 +220,7 @@ router.put('/:id',(req, res) => {
                 conn.createChannel(function(err, ch) {
                   var ex = 'notify';
                   var key = user.email;
-                  var msg = "L'evento '" + req.body.descrizione + "' è stato modificato";
+                  var msg = "L'evento '" + req.body.titolo + "' è stato modificato";
                   ch.assertExchange(ex, 'topic', {durable: false});
                   ch.publish(ex, key, new Buffer.from(msg));
                 });
@@ -274,7 +274,7 @@ router.put('/partecipa/:id', (req, res) => {
                 conn.createChannel(function(err, ch) {
                   var ex = 'notify';
                   var key = user2.email;
-                  var msg = req.user.nome + " " + req.user.cognome + " has joined your event '" + evento.titolo + "'";
+                  var msg = req.user.nome + " " + req.user.cognome + "si è unito all'evento '" + evento.titolo + "'";
                   console.log(msg);
                   ch.assertExchange(ex, 'topic', {durable: false});
                   ch.publish(ex, key, new Buffer.from(msg));
