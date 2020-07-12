@@ -9,7 +9,7 @@
     <p><b>Ora:</b> {{formatDate date 'HH:mm'}}</p>
     <p><b>descrizione:</b>  {{descrizione}}</p>
     <hr/>
-    <a href="/eventi/show/{{id}}" id="info" class="btn btn-dark btn-block mb-2">more..</a>
+    <a href="/eventi/show/{{id}}" id="info" class="btn btn-dark btn-block mb-2">Più info..</a>
 
     <form action="/eventi/delete/{{id}}?_method=PUT" method="post">
       <input type="hidden" name="_method" value="PUT">
@@ -41,17 +41,17 @@
   <p class="price">prezzo euro {{prezzo}}</p>
   <p>{{descrizione}}</p>
   <a href="/eventi/modifica_evento/{{id}}" id="modifica"  class="btn btn-primary btn-block mb-2">
-      <i class="fa fa-pencil"></i> Edit event
+      <i class="fa fa-pencil"></i> Modifica Evento
     </a>
     <form method="post" action="/eventi/{{id}}?_method=DELETE" id="delete-form" >
       <input type="hidden" name="_method" value="DELETE">
       <button type="submit" id="cancella" class="btn btn-danger btn-block" value="Delete">
-        <i class="fa fa-trash"></i> Delete
+        <i class="fa fa-trash"></i> Cancella
       </button>
     </form>
 </div>
 
 
 {{else}}
-  <p>No events found</p>
+  <p>Nessun Evento trovato</p>
 {{/each}}
