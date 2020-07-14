@@ -45,9 +45,20 @@ router.post('/ricerca', ensureAuthenticated, (req,res) => {
     console.log(req.body.indirizzo);
     console.log(req.body.categoria);
     //console.log(req.user.annunci);
+    console.log("..........");
+    console.log(req.body.inizio);
+    console.log(req.body.fine);
+    console.log(typeof req.body.fine);
+    console.log(typeof req.body.inizio);
+    var data1 = new Date(req.body.inizio);
+    var data2 = new Date(req.body.fine);
+    console.log(data1);
+    console.log(data2);
+    //var change = req.body.fine.substring(data);
+  
     
     
-   Evento.find({$and :[{citta: req.body.citta },{categoria: req.body.categoria},{creatore:{ $ne: req.user}}]})
+   Evento.find({$and :[{citta: req.body.citta },{categoria: req.body.categoria},{ data: { $gte: data1, $lte: data2 } },{creatore:{ $ne: req.user}}]})
     .populate('eventi')
     .then(eventi_trovati => {
       console.log("eventi cercati");
@@ -134,7 +145,9 @@ router.post('/crea_Evento',(req,res) => {
     nuovoEvento.titolo =  req.body.titolo;
     nuovoEvento.descrizione =  req.body.descrizione;
     console.log(req.body.time);
-    nuovoEvento.data =  req.body.data + ' ' + req.body.time;
+    console.log(typeof req.body.time);
+    nuovoEvento.data =  req.body.data;
+    nuovoEvento.ora =   req.body.time;
     nuovoEvento.creatore = req.user.id;
     nuovoEvento.immagine = req.body.immagine;
     nuovoEvento.indirizzo = req.body.indirizzo;
@@ -170,7 +183,7 @@ router.post('/crea_Evento',(req,res) => {
 
 
 
-//modifica dell'annuncio
+//modifica dell'evento
 
 router.put('/:id',(req, res) => {
   Evento.findOne({
@@ -207,7 +220,8 @@ router.put('/:id',(req, res) => {
         evento.titolo = req.body.titolo;
         evento.descrizione = req.body.descrizione;
         evento.venditore = req.user.id;        
-        evento.data = req.body.data + ' ' + req.body.time;
+        evento.data = req.body.data;
+        evento.ora = req.body.time;
         evento.immagine = req.body.immagine;
 
         for(i = 0; i < evento.partecipanti.length; i++){

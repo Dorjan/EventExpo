@@ -8,12 +8,12 @@
 <div class="card">
   <img src={{immagine}} alt="Denim Jeans" style="width:100%">
   <h1>{{titolo}}</h1>
-  <p class="luogo">luogo{{luogo}}</p>
-  <p>{{categoria}}</p>
-    <a href="/eventi/show/{{id}}"  id = "more" class="btn btn-primary btn-block mb-2">More..</a>
+  <p class="categoria">categoria:{{categoria}}</p>
+  <p>descrizione: {{descrizione}}</p>
+    <a href="/eventi/show/{{id}}"  id = "more" class="btn btn-primary btn-block mb-2">Piu info..</a>
 </div>
 {{else}}
-  <p>No events found</p>
+  <p>Nessun evento trovato</p>
 {{/each}}
 
 

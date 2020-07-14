@@ -21,6 +21,10 @@ const EventoSchema = new Schema({
     type: Date,
     required: true
   },
+  ora:{
+    type: String,
+    required: true
+  },
   creatore:{
     type: Schema.Types.ObjectId,
     ref:'utenti'

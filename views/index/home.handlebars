@@ -2,21 +2,34 @@
   <div class="col-md-8 mx-auto">
     <div class="card card-body">
       <form action="/eventi/ricerca" method="post">
-        <div class="form-group">
-          <label >Cosa cerchi?</label>
-          <input type="text" name="titolo" class="form-control" value="{{titolo}}" required>
-        </div>
-        <div class="form-group">
-          <label for="categoria">Categoria</label>
-          <input id= "categorie" type="text" name="categoria" class="form-control" value="{{categoria}}" required>
-        </div>
+      <div class="form-group">
+        <label for="categoria">Cosa cerchi ?Categoria:</label>
+        <select name="categoria" id="categoria">
+        <option value="concerti">Concerti</option>
+        <option value="mostre">Mostre</option>
+        <option value="eventi internazionali">Eventi internazionali</option>
+        <option value="fiere">Fiere</option>
+        <option value="teatro">Teatro</option>
+        </select>
+      </div>
         <div class="form-group">
           <label for="luogo">Dove</label>
           <input id = "citta" type="text" name="citta" class="form-control" value="{{citta}}" required>
         </div>
+        <div class="form-group">
+          <label for="date1">Da</label>
+            <input type="date" id="inizio" class="form-control" name="inizio" >
+          <label for="date2">a</label>
+            <input type="date" id="fine"  class="form-control" name="fine">
+        </div>
+        <div class="form-group"></div>
         <button type="submit"  id="submit"  class="btn btn-primary">Cerca</button>
+        </div>
       </form>
+
     </div>
+    </div>
+</div>
       <script>
         function autocomplete(inp, arr) {
   /*the autocomplete function takes two arguments,
@@ -121,3 +134,4 @@ autocomplete(document.getElementById("categorie"), categories);
 </script>
 </div>
 </div>
+ 

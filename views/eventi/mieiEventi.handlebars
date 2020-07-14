@@ -3,10 +3,10 @@
 <!--mostro eventi a cui partecipo -->
 {{#each eventsjoined}}
   <div class="card card-body mb-2">
-    <img src={{immagine}}  width = "200" height = "200" alt="Denim Jeans" style="width:100%">
+    <img src={{immagine}}  alt="Denim Jeans" style="width:100%">
     <h4 align="center">{{titolo}}</h4>
     <p><b>Data:</b> {{formatDate data 'MMMM Do YYYY'}}</p>
-    <p><b>Ora:</b> {{formatDate data 'HH:mm'}}</p>
+    <p><b>Ora:</b> {{ora}}</p>
     <p><b>descrizione:</b>  {{descrizione}}</p>
     <hr/>
     <a href="/eventi/show/{{id}}" id="info" class="btn btn-dark btn-block mb-2">Più info..</a>
