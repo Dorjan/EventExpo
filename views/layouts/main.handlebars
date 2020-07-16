@@ -82,8 +82,8 @@
         });
 
         socket.on($('#email').val(), function(data){
-          console.log("dentro al socket on email");
-          console.log(data);
+          //console.log("dentro al socket on email");
+          //console.log(data);
           $('#notifies').prepend('<div class="alert alert-info"><i class="fa fa-comments"></i><strong> ' + data + '</strong></div>');
           setTimeout(function() { $('#notifies').html(''); }, 10000);
         });
