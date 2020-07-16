@@ -72,7 +72,7 @@
     <script>
       /********** Handle NOTIFIES and CHAT throw WebSocket and Socket.io *********/
       $(function () {
-        var socket = window.io.connect('http://localhost:3000/', {transports:['websocket']});
+        var socket = window.io.connect('https://eventexpoapp.herokuapp.com/', {transports:['websocket']});
 
         /// Notifies Management
         socket.on($('#email').val()+"ack", function(data){
