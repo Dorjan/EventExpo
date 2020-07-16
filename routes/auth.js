@@ -59,7 +59,6 @@ router.post('/registrazione', (req, res) => {
       nome: req.body.nome,
       cognome: req.body.cognome,
       email: req.body.email,
-      regione: req.body.regione
       //password cleared
     });
   } else {
@@ -83,7 +82,6 @@ router.post('/registrazione', (req, res) => {
             email: req.body.email,
             password: req.body.password,
             ruolo: req.body.ruolo,
-            regione: req.body.regione,
             info: role,     
           });
           bcrypt.genSalt(10, (err,salt) => {			//password crypting 
