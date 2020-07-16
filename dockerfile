@@ -14,8 +14,7 @@ RUN npm install
 
 # Bundle app source
 COPY . .
-# RUN dpkg -i rabbitmq-server_3.8.5-1_all.deb
 
-# RUN rm rabbitmq-server_3.8.5-1_all.deb
+
 EXPOSE 3000 
 CMD [ "node", "server.js" ]
