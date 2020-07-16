@@ -96,7 +96,7 @@ router.post('/registrazione', (req, res) => {
                 .catch(err => {
                   console.log(err);
                   return;
-                })
+                });
               });
             });
           }
@@ -131,7 +131,7 @@ router.get('/google/redirect',
 // logout utente
 router.get('/logout', (req, res) => {
   req.logout();
-  req.flash('success_msg', 'Logged out')
+  req.flash('success_msg', 'Logged out');
   res.redirect('/auth/login');
 });
 
