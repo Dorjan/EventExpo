@@ -23,7 +23,7 @@
 <script>
       /********** Handle Chat Message throw WebSocket and Socket.io *********/
       $(function () {
-        var socket = window.io.connect('https://eventexpoapp.herokuapp.com/', {transports:['websocket']});
+        var socket = window.io.connect('http://localhost:3000/', {transports:['websocket']});
 
         // Send an event that activates chat message's queue and download all prev messages
         socket.emit('chatstart', $('#email').val());
