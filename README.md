@@ -4,9 +4,6 @@ Lo scopo dell'applicazione
 è quello di creare, gestire e partecipare ad eventi. Gli utenti possono interagire tra di loro con una chat ed un sistema di notifiche, basato Su Socket.io ed AMQP.
 Per ulteriori informazioni, si invita a guardare la documentazione offerta
 
-- [Presentazione]()
-- [Documentazione]()
-
 L'applicazione può essere eseguita tramite Docker
 
 **Nota** : Il codice sorgente è scritto per lavorare in locale sulla porta: 3000 
@@ -21,8 +18,8 @@ L'applicazione può essere eseguita tramite Docker
 5. Si devono usare Websocket e/o AMQP (o simili es MQTT)
 6. Il progetto deve essere su GIT (GITHUB, GITLAB ...) e documentato don un README che illustri almeno scopo del progetto, tecnologie usate, come installarlo, come far girare i casi di test
 7. Le API REST implementate in SERV devono essere documentate su GIT e devono essere validate con un caso di test
-
 ***
-Realizzato da
-Dorjan Hysa
-Marco Pennacchia
+
+### Realizzato da:
+- Dorjan Hysa
+- Marco Pennacchia
