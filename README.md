@@ -18,7 +18,7 @@ Lato front-end -> Html, Css, Javascript, Handlebars
 
 Mapbox: <https://docs.mapbox.com/> -> API neccessarie per mostrare sulla mappa il luogo dell'evento
 
-Opencage: <https://opencagedata.com/api> -> API neccessaria per geolocallizzare la posizione dell'evento
+Opencage: <https://opencagedata.com/api> -> API neccessaria per geolocalizzare la posizione dell'evento
 
 # Come Scaricare e provare il progetto
 Per scaricare il progetto, devi clonare il repository su git tramite il link:
@@ -52,5 +52,5 @@ Poi apri un browser e metti l'url: <http://localhost:3000/>
 ***
 
 ### Realizzato da:
-- Marco Pennacchia
+- Marco Pennacchia,
 - Dorjan Hysa
