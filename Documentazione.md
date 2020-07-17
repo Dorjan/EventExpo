@@ -17,9 +17,9 @@ guarda helpers / auth per la funzione sureAuthenticated
 
   * ***POST '/login'*** : utilizzato solo per l'autenticazione locale, accetta nome utente e password dal modulo di accesso e autentica gli utenti (gestito tramite passaport, vedi anche passport.js)
   
-  * ***GET '/register'*** : per mostrare i metodi di iscrizione (locale e oauth)
+  * ***GET '/iscriviti'*** : per mostrare i metodi di iscrizione (locale e oauth)
   
-  * ***POST '/register'*** : utilizzato solo per l'autenticazione locale, prende i dettagli dal modulo di registrazione e crea un nuovo utente su DB. controlla gli errori e li mostra. Esegue anche la crittografia della password tramite bcrypt
+  * ***POST '/iscriviti'*** : utilizzato solo per l'autenticazione locale, prende i dettagli dal modulo di registrazione e crea un nuovo utente su DB. controlla gli errori e li mostra. Esegue anche la crittografia della password tramite bcrypt
  
   * ***GET '/userPage'*** : per mostrare la pagina dell'utente
   
@@ -33,12 +33,12 @@ guarda helpers / auth per la funzione sureAuthenticated
   
   * ***GET '/logout'*** : per disconnettere un utente dall'app e reindirizzare su / login
 
-### events.js
-  * ***GET '/mieieventi'*** : per mostrare gli eventi dell'utente. Innanzitutto, gli eventi creati dal gestore. Poi, eventi a cui l'utente si è unito.
+### eventi.js
+  * ***GET '/mieiEventi'*** : per mostrare gli eventi dell'utente. Innanzitutto, gli eventi creati dal gestore. Poi, eventi a cui l'utente si è unito.
 
   * ***GET '/crea_Evento'*** : per mostrare il modulo "crea nuovo evento"
   
-  * ***POST '/creaEvento'*** : prende i dettagli dal modulo "crea nuovo evento", verifica la presenza di errori e aggiunge l'evento nel DB. Quindi avvisa tutti gli utenti tramite AMQP
+  * ***POST '/crea_Evento'*** : prende i dettagli dal modulo "crea nuovo evento", verifica la presenza di errori e aggiunge l'evento nel DB. Quindi avvisa tutti gli utenti tramite AMQP
   
   * ***GET '/show/:id'*** : per mostrare informazioni sull'evento selezionato da: id. fornisce anche la funzione di partecipa 
   
@@ -99,8 +99,8 @@ utilizzato per contenere le funzioni del middleware passaporto, l'e-mail viene u
 
 
 ## Altre cartelle e server.js
-  * La cartella "modelli" contiene schemi di database per utenti ed eventi  
-  * La cartella "pubblica" contiene file e immagini css  
+  * La cartella "models" contiene schemi di database per utenti ed eventi  
+  * La cartella "public" contiene file e immagini css  
   * **server.js** è il file principale, prima stabilisce la connessione con mongoDB e amqp e gestisce la connessione socket.io. Imposta il motore di visualizzazione, i middleware, le variabili globali e la cartella statica. Quindi avvia il server
   ***
 
@@ -153,11 +153,15 @@ Tutto è gestito dalla programmazione basata sugli eventi di Socket.io in questo
 
 
 3)
-  - Quando il client riceve l'evento "ack", mostra il pulsante per entrare nell'applicazione (questo è necessario per garantire la connessione ad amqp).
+    - Quando il client riceve l'evento "ack", mostra il pulsante per entrare nell'applicazione (questo è necessario per garantire la connessione ad amqp).
 
 
-  - Quando il client riceve un evento "email", stampa una nuova notifica nella parte superiore della pagina.
+    - Quando il client riceve un evento "email", stampa una nuova notifica nella parte superiore della pagina.
 
 
-4) Quando un utente crea un evento, invia una notifica allo scambio di argomenti chiamato "notifica" con la chiave "tutto".
+4) Quando un utente crea un evento, invia una notifica allo scambio di argomenti chiamato "notifica" con la chiave "all".
 ***
+
+### Cartella utils
+
+Contiene il file geocoder.js, nel quale è contetnuto il modulo(node-geocoder) neccessario per fornire la posizione geografica del evento. Sfruttando le API di (opencage).  
