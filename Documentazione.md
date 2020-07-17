@@ -153,17 +153,22 @@ Tutto è gestito dalla programmazione basata sugli eventi di Socket.io in questo
 ![welcome](https://i.imgur.com/uCpdbBY.jpg?1)
 (welcome.handlebars)
 
-
 2) Il server riceve un evento "notify" e invia un evento "ack" al client. Quindi attende la notifica. Quando riceve una nuova notifica, il server la invia al client con un evento "email".
 
+![server](https://i.imgur.com/3GSUs01.jpg?1)
+(server.js)
 
 3)
     - Quando il client riceve l'evento "ack", mostra il pulsante per entrare nell'applicazione (questo è necessario per garantire la connessione ad AMQP).
-
+![main](https://i.imgur.com/KNXry0e.jpg?1)
+(main.handlebars)
 
     - Quando il client riceve un evento "email", stampa una nuova notifica nella parte superiore della pagina.
-
+![main](https://i.imgur.com/NDe09s7.jpg?1)
+(main.handelbars)
 
 4) Quando un utente crea un evento, invia una notifica al topic exchange chiamato "notify" con la chiave "all".
+![eventi](https://i.imgur.com/H1zknn0.jpg?1)
+(eventi.js)
 ***
 
