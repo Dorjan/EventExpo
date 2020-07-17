@@ -17,6 +17,7 @@ Lato front-end -> Html, Css, Javascript, Handlebars
 # Rest API
 
 Mapbox: <https://docs.mapbox.com/> -> API neccessarie per mostrare sulla mappa il luogo dell'evento
+
 Opencage: <https://opencagedata.com/api> -> API neccessaria per geolocallizzare la posizione dell'evento
 
 # Come Scaricare e provare il progetto
