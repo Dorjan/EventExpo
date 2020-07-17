@@ -90,7 +90,7 @@ router.post('/registrazione', (req, res) => {
               newUser.password = hash; 
               newUser.save()
                 .then(user => {
-                  req.flash('success_msg', 'You are now registered, please log-in');
+                  req.flash('success_msg', 'Sei registrato, per favore autenticati');
                   res.redirect('/auth/login');
                 })
                 .catch(err => {
@@ -131,7 +131,7 @@ router.get('/google/redirect',
 // logout utente
 router.get('/logout', (req, res) => {
   req.logout();
-  req.flash('success_msg', 'Logged out');
+  req.flash('success_msg', 'Ti sei disconnesso');
   res.redirect('/auth/login');
 });
 
