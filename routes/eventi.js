@@ -39,17 +39,8 @@ router.get('/show/:id', (req, res) => {
 // route ricerca annunci
 router.post('/ricerca', ensureAuthenticated, (req,res) => {
   //trova gli annunci creati dall'utente
-    console.log(req.user);
-    console.log(req.body.titolo);
-    //console.log(req.body.descrizione);
-    console.log(req.body.indirizzo);
-    console.log(req.body.categoria);
+   
     //console.log(req.user.annunci);
-    console.log("..........");
-    console.log(req.body.inizio);
-    console.log(req.body.fine);
-    console.log(typeof req.body.fine);
-    console.log(typeof req.body.inizio);
     var data1 = new Date(req.body.inizio);
     var data2 = new Date(req.body.fine);
     console.log(data1);
@@ -144,8 +135,6 @@ router.post('/crea_Evento',(req,res) => {
     nuovoEvento.categoria= req.body.categoria;
     nuovoEvento.titolo =  req.body.titolo;
     nuovoEvento.descrizione =  req.body.descrizione;
-    console.log(req.body.time);
-    console.log(typeof req.body.time);
     nuovoEvento.data =  req.body.data;
     nuovoEvento.ora =   req.body.time;
     nuovoEvento.creatore = req.user.id;
@@ -194,7 +183,6 @@ router.put('/:id',(req, res) => {
       
       console.log(req.body.categoria);
 
-      //server side validation
       if(!req.body.categoria){
         errors.push({text:'aggiungi una categoria'});
       }
@@ -259,7 +247,6 @@ router.put('/:id',(req, res) => {
 
 //partecipa all'evento
 router.put('/partecipa/:id', (req, res) => {
-  console.log("sto cercando l'evento");
   Evento.findOne({
     _id: req.params.id
     })
@@ -273,24 +260,22 @@ router.put('/partecipa/:id', (req, res) => {
           req.flash('error_msg', "Partecipi già all'evento");
           res.redirect('/eventi/mieiEventi');
         } else {
-          //to add in both user (events) list and event (joiners) list
+          //per aggiungere l'evento nella lista eventi dell'utente e l'utente nella lista partecipanti all'evento
           evento.partecipanti.push(req.user.id);
           user.eventi.unshift(evento);
           user.save();
 
-          //to send a notify to event's creator
+          //mando una notifica al creatore dell'evento
           utente.findOne({
             _id: evento.creatore._id
           })
           .then(user2 => {
             if(user._id.toString() != evento.creatore._id.toString()){
-              // Send a notify to event's creator
               amqp.connect(keys.amqpURI, function(err, conn) {
                 conn.createChannel(function(err, ch) {
                   var ex = 'notify';
                   var key = user2.email;
                   var msg = req.user.nome + " " + req.user.cognome + "si è unito all'evento '" + evento.titolo + "'";
-                  console.log(msg);
                   ch.assertExchange(ex, 'topic', {durable: false});
                   ch.publish(ex, key, new Buffer.from(msg));
                 });
@@ -315,7 +300,6 @@ router.put('/partecipa/:id', (req, res) => {
 
 //abbandona evento
 
-//abbandona l'evento
 
 router.put('/delete/:id', (req, res) => {
   // cancellare l'utente nella lista partecipanti
@@ -326,17 +310,16 @@ router.put('/delete/:id', (req, res) => {
     .then(evento => {
       evento.partecipanti.pull(req.user.id);
 
-      //to delete also in the user (events) list
+      //per cancellare l'evento nella lista eventi dell'utente
       utente.findOne({
           _id: req.user.id
         })
         .then(user => {
-          //to send a notify to event's creator una notifica all'utente cha ha aggiunto
+          //mando una notifica al creatore dell'evento
           utente.findOne({
             _id: evento.creatore._id
           })
           .then(user2 => {
-            // Send a notify to event's creator
             if(user._id.toString() != evento.creatore._id.toString()){
               amqp.connect(keys.amqpURI, function(err, conn) {
                 conn.createChannel(function(err, ch) {
@@ -383,12 +366,12 @@ router.delete('/:id', (req, res) => {
             _id: evento.partecipanti[i]._id
           }).then(user => {
             if(user._id.toString() != evento.creatore._id.toString()){
-              // Send a notify to all joiners
+              // mando una notifica a tutti gli utenti partecipanti
               amqp.connect(keys.amqpURI, function(err, conn) {
                 conn.createChannel(function(err, ch) {
                   var ex = 'notify';
                   var key = user.email;
-                  var msg = "ATTENTION: the event '" + evento.titolo + "' that you're joined has been canceled";
+                  var msg = "Attenzione: l'evento '" + evento.titolo + "' a cui partecipi è stato cancellato";
                   console.log(msg);
                   ch.assertExchange(ex, 'topic', {durable: false});
                   ch.publish(ex, key, new Buffer.from(msg));
@@ -397,7 +380,7 @@ router.delete('/:id', (req, res) => {
                 setTimeout(function() {conn.close();}, 500);
               });
             }
-            //to delete also in the user (events) list
+            //per cancellare l'evento nella lista eventi dell'utente
             user.eventi.pull(evento);
             user.save();
           });
