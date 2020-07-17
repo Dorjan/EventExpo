@@ -150,10 +150,10 @@ Tutto è gestito dalla programmazione basata sugli eventi di Socket.io in questo
 
 1) Dopo l'accesso, l'utente verrà reindirizzato nella pagina di benvenuto. Qui il client invia al server un evento di "notify" con la sua email.
 
-welcome.handlebars
-![](https://i.ibb.co/N6nRcdm/Screenshot-155.png)
 
-Move along.
+![welcome](https://i.ibb.co/N6nRcdm/Screenshot-155.png)
+(welcome.handlebars)
+
 
 2) Il server riceve un evento "notify" e invia un evento "ack" al client. Quindi attende la notifica. Quando riceve una nuova notifica, il server la invia al client con un evento "email".
 
