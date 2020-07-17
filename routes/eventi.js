@@ -65,7 +65,7 @@ router.post('/ricerca', ensureAuthenticated, (req,res) => {
       res.render('eventi/eventi_trovati', {
         eventi_trovati: eventi_trovati
       });
-    })
+    });
 });
 
 
@@ -90,15 +90,15 @@ router.get('/mieiEventi', ensureAuthenticated, (req,res) => {
           mieieventi:mieieventi,
           eventsjoined: utentetrovato.eventi
         });
-      })
-    })
+      });
+    });
 });
 
 
 // Crea evento route
 router.get('/crea_Evento',ensureAuthenticated,(req,res) => {
   res.render('eventi/crea_Evento');
-})
+});
 
 
 //rindirizzo alla form di edit dell'annuncio
@@ -112,7 +112,7 @@ router.get('/modifica_Evento/:id', ensureAuthenticated, (req,res) => {
         evento: evento
       });
     });
-})
+});
 
 
 //upload
@@ -162,7 +162,7 @@ router.post('/crea_Evento',(req,res) => {
         console.log("evento creato");
         req.user.save();
         res.redirect('/eventi/mieiEventi');
-      })
+      });
       console.log("sono qui");
           // Send a notify to all users
       amqp.connect(keys.amqpURI,function(err,conn){
@@ -224,6 +224,7 @@ router.put('/:id',(req, res) => {
         evento.ora = req.body.time;
         evento.immagine = req.body.immagine;
 
+      
         for(i = 0; i < evento.partecipanti.length; i++){
           utente.findOne({
             _id: evento.partecipanti[i]._id
@@ -249,7 +250,7 @@ router.put('/:id',(req, res) => {
         .then(evento => {
           req.flash('success_msg', 'Evento aggiornato');
           res.redirect('/eventi/mieiEventi');
-        })
+        });
       }
     });
 });
@@ -399,7 +400,7 @@ router.delete('/:id', (req, res) => {
             //to delete also in the user (events) list
             user.eventi.pull(evento);
             user.save();
-          })
+          });
         }
       }
     }).then(() =>{
