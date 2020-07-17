@@ -150,10 +150,7 @@ Tutto è gestito dalla programmazione basata sugli eventi di Socket.io in questo
 
 1) Dopo l'accesso, l'utente verrà reindirizzato nella pagina di benvenuto. Qui il client invia al server un evento di "notify" con la sua email.
 
-<img src="https://i.imgur.com/uCpdbBY.jpg?1" width="500" height="600">
-
-![welcome](./dorjan/Download/welcome.jpeg)
-
+![welcome](https://i.imgur.com/uCpdbBY.jpg?1)
 (welcome.handlebars)
 
 
