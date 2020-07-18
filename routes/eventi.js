@@ -106,15 +106,13 @@ router.get('/modifica_Evento/:id', ensureAuthenticated, (req,res) => {
 });
 
 
-//upload
 // aggiunta di un annuncio
 router.post('/crea_Evento',(req,res) => {
   
   
   let errors = [];
 
-  //console.log(req.body.file);
-  //server side validation
+ 
   if(!req.body.categoria){
     errors.push({text:'scegli una categoria '});
   }
