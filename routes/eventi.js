@@ -205,7 +205,7 @@ router.put('/:id',(req, res) => {
             _id: evento.partecipanti[i]._id
           }).then(user => {
             if(user._id.toString() != evento.creatore._id.toString()){
-              // Send a notify to all joiners
+              // Mando una notifica a tutti i partecipanti
               amqp.connect(keys.amqpURI, function(err, conn) {
                 conn.createChannel(function(err, ch) {
                   var ex = 'notify';
