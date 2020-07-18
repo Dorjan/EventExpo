@@ -35,9 +35,7 @@ docker build -t eventexpo .
 docker run -p 3000:3000 eventexpo
 ```
 
-Poi apri un browser e metti l'url: <http://localhost:3000/>
-
-**Nota** : Il codice sorgente è scritto per lavorare in locale sulla porta: 3000 
+Il programma funziona in locale all'indirizzo: <http://localhost:3000/>
 
 ***
 

@@ -20,7 +20,7 @@
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
         crossorigin="anonymous"
     />
-         <!-- font icone google e facebook-->
+         <!-- font icone google-->
          
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
       integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -55,7 +55,7 @@
 
      <link rel="stylesheet" type = "text/css" href="/css/style.css"/>
 
-      <!-- ckeditor (to add form details options) -->
+      <!-- ckeditor (per aggiungere detagli alla form) -->
     <script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>
       
       
@@ -66,15 +66,15 @@
       });
     </script>
 
-      <!-- jquery and socket.io (to handle chat and notifies) -->
+      <!-- jquery and socket.io (per gestire chat e notifiche) -->
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-      /********** Handle NOTIFIES and CHAT throw WebSocket and Socket.io *********/
+      /********** gestione NOTIFICHE e CHAT tramite WebSocket and Socket.io *********/
       $(function () {
         var socket = window.io.connect('http://localhost:3000/', {transports:['websocket']});
 
-        /// Notifies Management
+        /// gestione notifiche
         socket.on($('#email').val()+"ack", function(data){
             $("#waiting").html("");
             $('#start').css('display', 'block');
@@ -87,7 +87,7 @@
         });
 
 
-        /// Chat Management
+        /// gestione messaggi
         $('#ws-form').submit(function(){
           socket.emit('chat', {
             message: $('#message').val(),

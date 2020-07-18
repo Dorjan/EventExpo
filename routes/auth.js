@@ -6,30 +6,30 @@ const router = express.Router();
 const {ensureAuthenticated} = require('../helpers/auth');
 
 
-//load user module
+//carico modulo utente
 require('../models/Utente');
 const User = mongoose.model('utenti');
 
-//log-in routes
+//routes d'accesso
 router.get('/login', (req,res) =>{
   res.render('auth/login');
 });
 
 
-//sign-up routes
+//routes d'iscrizione
 router.get('/iscriviti', (req,res) =>{
   res.render('auth/iscriviti');
 });
 
 
 
-//user page routes
+//routes della pagina utente
 router.get('/userPage', ensureAuthenticated, (req,res) =>{
   res.render('auth/paginaUtente');
 });
 
 
-//form di log in
+//form per l'accesso
 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
@@ -40,7 +40,7 @@ router.post('/login', (req, res, next) => {
 });
 
 
-//register Form
+// Form iscrizione
 router.post('/registrazione', (req, res) => {
   let errors = [];
 
@@ -52,17 +52,16 @@ router.post('/registrazione', (req, res) => {
     errors.push({text:'La password deve contenere almeno 6 caratteri'});
   }
 
-	//server side validation
+	//validazione server
   if(errors.length > 0){
     res.render('auth/iscriviti', {
       errors: errors,
       nome: req.body.nome,
       cognome: req.body.cognome,
       email: req.body.email,
-      //password cleared
     });
   } else {
-    User.findOne({email: req.body.email})       //to check if email already in
+    User.findOne({email: req.body.email})       //controlla se la mail già esiste
       .then(user =>{
         if(user){
           req.flash('error_msg', 'Email già usata');
@@ -84,8 +83,8 @@ router.post('/registrazione', (req, res) => {
             ruolo: req.body.ruolo,
             info: role,     
           });
-          bcrypt.genSalt(10, (err,salt) => {			//password crypting 
-            bcrypt.hash(newUser.password, salt, (err, hash) => { //(salt is additional input to a function that hashes data)
+          bcrypt.genSalt(10, (err,salt) => {			//criptare la password 
+            bcrypt.hash(newUser.password, salt, (err, hash) => { //(salt è un input extra per una funzione che fa hashing sui dati)
               if(err) throw err;                          
               newUser.password = hash; 
               newUser.save()
@@ -105,10 +104,10 @@ router.post('/registrazione', (req, res) => {
   });
   
   
-// auth with dropbox
+// auth con dropbox
 router.get('/dropbox', passport.authenticate('dropbox-oauth2'));
 
-// return from authenticate
+// ritorno dalla autenticazione
 router.get('/dropbox/callback', 
     passport.authenticate('dropbox-oauth2', {
         successRedirect:'/welcome', 
@@ -117,10 +116,10 @@ router.get('/dropbox/callback',
 );
 
 
-// auth with google
+// auth con google
 router.get('/google', passport.authenticate('google', { scope: ['profile','email'] }));
 
-// callback route for google to redirect to
+// callback route di google per il redirect
 router.get('/google/redirect', 
   passport.authenticate('google',  {
     successRedirect: '/welcome',
@@ -128,7 +127,7 @@ router.get('/google/redirect',
   })
 );
 
-// logout utente
+// utente disconnesso
 router.get('/logout', (req, res) => {
   req.logout();
   req.flash('success_msg', 'Ti sei disconnesso');

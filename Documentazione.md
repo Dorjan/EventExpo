@@ -1,8 +1,8 @@
 # Documentazione
 
-## API REST definite:
+## API REST:
 
-Nota: Guarda helpers/auth per la funzione ensureAuthenticated
+**Nota**: Guarda helpers/auth per la funzione ensureAuthenticated
 
 ### index.js
   * ***GET '/'*** : home page, mostra la form di ricerca degli eventi creati nel DB dai gestori

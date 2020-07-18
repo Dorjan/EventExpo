@@ -1,12 +1,12 @@
 const moment = require('moment');
 
 module.exports = {
-  //to remove html tags
+  //rimuove tag html
   stripTags: function(input){
     return input.replace(/<(?:.|\n)*?>/gm, '');
   },
-  //to make dates looks better
+  //formatta bene la data
   formatDate: function(date, format){
     return moment(date).format(format);
   }
-}
+};

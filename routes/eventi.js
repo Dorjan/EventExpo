@@ -8,19 +8,10 @@ const path = require('path');
 const fs = require('fs');
 const amqp = require('amqplib/callback_api');
 const keys = require('../config/keys.js');
-//const geocoder = require('../utils/geocoder');
-//const keys = require('../config/keys.js');
 const NodeGeocoder = require('node-geocoder');
  
 
  
-
-
-
-
-
-
-
 // mostra il singolo evento
 router.get('/show/:id', (req, res) => {
   Evento.findOne({
@@ -36,17 +27,15 @@ router.get('/show/:id', (req, res) => {
 
 
 
-// route ricerca annunci
+// route ricerca eventi
 router.post('/ricerca', ensureAuthenticated, (req,res) => {
-  //trova gli annunci creati dall'utente
+  //trova gli eventi creati dall'utente
    
-    //console.log(req.user.annunci);
+    
     var data1 = new Date(req.body.inizio);
     var data2 = new Date(req.body.fine);
     console.log(data1);
     console.log(data2);
-    //var change = req.body.fine.substring(data);
-  
     
     
    Evento.find({$and :[{citta: req.body.citta },{categoria: req.body.categoria},{ data: { $gte: data1, $lte: data2 } },{creatore:{ $ne: req.user}}]})
@@ -65,7 +54,7 @@ router.post('/ricerca', ensureAuthenticated, (req,res) => {
 
 // eventi route
 router.get('/mieiEventi', ensureAuthenticated, (req,res) => {
-  //trova gli annunci creati dall'utente
+  //trova gli eventi creati dall'utente
 
    Evento.find({
     creatore: req.user.id
@@ -92,7 +81,7 @@ router.get('/crea_Evento',ensureAuthenticated,(req,res) => {
 });
 
 
-//rindirizzo alla form di edit dell'annuncio
+//rindirizzo alla form di edit dell'evento
 
 router.get('/modifica_Evento/:id', ensureAuthenticated, (req,res) => {
   Evento.findOne({
@@ -151,7 +140,7 @@ router.post('/crea_Evento',(req,res) => {
         res.redirect('/eventi/mieiEventi');
       });
       console.log("sono qui");
-          // Send a notify to all users
+          // manda una notifica a tutti gli utenti
       amqp.connect(keys.amqpURI,function(err,conn){
         conn.createChannel(function(err, ch) {
           var ex = 'notify';
@@ -249,7 +238,7 @@ router.put('/partecipa/:id', (req, res) => {
     _id: req.params.id
     })
     .then(evento => {
-      //check if already joined
+      //controlla se sei già un partecipante
       utente.findOne({
         _id: req.user.id
       })

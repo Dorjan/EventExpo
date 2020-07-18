@@ -1,7 +1,4 @@
 
-
-
-
 <div class ="card card-body mb-2">
     <div id="map-container" style='width: 460px; height: 300px;' class="map-container z-depth-1-half"></div>
   <input type = "hidden" id = "mappa" value = "{{evento.luogo.coordinate.[0]}}"  />
@@ -14,7 +11,7 @@
   <p id="mappa"><b>luogo:</b>  {{evento.luogo.coordinate.[1]}}</p>
   
 
-  <!-- to make visible join button only if user is logged-->
+  <!-- rendere visibile il pulsante partecipa dopo l'accesso-->
   {{#if user}}
     <form action="/eventi/partecipa/{{evento.id}}?_method=PUT" method="post">
       <input type="hidden" name="_method" value="PUT">
@@ -27,8 +24,6 @@
   {{/if}}
 </div>
 </div>
-
-
 
 
 <script>

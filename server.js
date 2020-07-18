@@ -32,7 +32,7 @@ const auth = require('./routes/auth');
 const eventi = require('./routes/eventi');
 const chat = require('./routes/chat');
 
-//load keys
+//carico keys
 const keys = require('./config/keys.js');
 
 //handlebars helpers
@@ -44,12 +44,10 @@ const {
 
 
 
-
-
-
 /********************************************************************************************************/
-/*                     WebSocket and AMQP connection to handle CHAT and NOTIFIES                        */
+/*                Connessione WebSocket e AMQP per gestire CHAT e NOTIFICHE                        */
 /********************************************************************************************************/
+
 io.on('connection', function(socket){
 
   // gestisco l'evento notify
@@ -124,29 +122,13 @@ io.on('connection', function(socket){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Map global promise - get rid of warning
+// Map global promise - scartare gli warning
 mongoose.Promise = global.Promise;
-//connect to mongoose
+//connetti  al mongoose
 mongoose.connect(keys.mongoDB, {
     useNewUrlParser: true
   })
-    .then(() => console.log('MongoDb Connected..'))      //use promise instead of callbacks for cleaner code
+    .then(() => console.log('MongoDb Connected..'))      //uso premise al posto di callback per avere un codice pulito
     .catch(err => console.log(err));
 
 
@@ -170,7 +152,6 @@ app.use(methodOverride('_method'));
 
 
 
-
 //express session middleware
 app.use(session({
   secret: 'pennacchia',
@@ -186,7 +167,7 @@ app.use(passport.session());
 
 //flash middleware
 app.use(flash());
-// Set global vars (for navbar and error messages)
+// variabili globali (per navbar e messaggi d'errore)
 app.use(function(req, res, next){
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
@@ -195,12 +176,6 @@ app.use(function(req, res, next){
   next();
 });
 
-
-
-
-
-
-//app.use(express.static('images'));
 
 
 app.use(express.static(path.join(__dirname, 'public')));

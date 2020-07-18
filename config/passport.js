@@ -9,7 +9,7 @@ const bcrypt = require('bcryptjs');
 const Utente = mongoose.model('utenti');
 
 module.exports = function(passport){
-  //da accedere tramite la form di log in
+  //da accedere tramite la form di accesso
   passport.use('local',
       new LocalStrategy({usernameField: 'email'}, (email, password, done) => {
       // verifico esistenza utente
@@ -32,7 +32,7 @@ module.exports = function(passport){
       });
     }));
 
-//to access by dropbox
+//accesso tramite dropbox
 passport.use('dropbox-oauth2',
 new DropboxOAuth2Strategy({
   apiVersion: '2',
@@ -48,17 +48,17 @@ new DropboxOAuth2Strategy({
     email: profile.emails[0].value,
     info: true,
     ruolo: "gestore"
-  }
+  };
 
-  // Check for existing user
+  // controlla se esiste già l'utente
   Utente.findOne({
     email:profile.emails[0].value
   }).then(user => {
     if(user){
-      // Return user
+      // ritorna utente
       done(null, user);
     } else {
-      // Create user
+      // Crea utente
       new Utente(newUser)
         .save()
         .then(user => done(null, user));
@@ -68,7 +68,7 @@ new DropboxOAuth2Strategy({
 );
 
 
-//to access by google
+//accesso tramite google
 passport.use('google',
 new GoogleStrategy({
   clientID: keys.google.clientID,
@@ -84,22 +84,22 @@ new GoogleStrategy({
     email: profile.emails[0].value,
     info: true,
     ruolo:"gestore"
-  }
+  };
 
-  // Check for existing user
+  // controlla per utente già esistente
   Utente.findOne({
     email:profile.emails[0].value
   }).then(user => {
     if(user){
-      // Return user
+      // ritorna utente
       done(null, user);
     } else {
-      // Create user
+      // Crea utente
       new Utente(newUser)
         .save()
         .then(user => done(null, user));
     }
-  })
+  });
 })
 );
 
@@ -114,4 +114,4 @@ new GoogleStrategy({
             done(err, user);
         });
     });
-}
+};
