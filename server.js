@@ -52,7 +52,7 @@ const {
 /********************************************************************************************************/
 io.on('connection', function(socket){
 
-  // Handle notify event
+  // gestisco l'evento notify
   socket.on('notify', function(data){
     console.log("dentro al notify");
     console.log(data);
@@ -64,7 +64,7 @@ io.on('connection', function(socket){
 
               ch.assertQueue(data, {exclusive: false}, function(err, q) {
                   console.log(" notify ->[*] Waiting for messages in %s", q.queue);
-                  io.emit(data+"ack");  //Ack to sure the connection
+                  io.emit(data+"ack");  //Ack per garantire la connessione
                   ch.bindQueue(q.queue, ex, data);
                   ch.bindQueue(q.queue, ex, "all");
                   ch.consume(q.queue, function(msg) {
@@ -79,7 +79,7 @@ io.on('connection', function(socket){
   });
 
 
-  // Download all prev messages
+  // Scarica i messaggi precedenti della chat
   socket.on('chatstart', function(data){
     if(data != ''){
       amqp.connect(keys.amqpURI, function(err, conn) {
@@ -88,11 +88,10 @@ io.on('connection', function(socket){
             ch.assertExchange(ex, 'topic', {durable: false});
 
             ch.assertQueue("chat"+data, {exclusive: false}, function(err, q) {
-                console.log(" [*] Waiting for messages in %s", q.queue);
+                console.log(" [*] In attesa dei messaggi in %s", q.queue);
                 ch.bindQueue(q.queue, ex, 'chat');
                 ch.consume(q.queue, function(msg) {
                   io.emit("chat"+data, msg.content.toString());
-                  //console.log(" [x] %s", msg.content.toString());
                 }, {noAck: false});
             });
         });
@@ -101,10 +100,10 @@ io.on('connection', function(socket){
     }
   });
 
-  // Handle message event
+  // gestisco l'evento chat
   socket.on('chat', function(msg){
     io.emit('chat', msg);
-    // Send chat message to the main queue
+    // Invio il messaggio della chat alla coda principale
     amqp.connect(keys.amqpURI, function(err, conn) {
       conn.createChannel(function(err, ch) {
         var ex = 'chat';
@@ -116,7 +115,7 @@ io.on('connection', function(socket){
     });
   });
 
-  // Handle typing event
+  // gestisco l'evento typing
   socket.on('typing', function(data){
     socket.broadcast.emit('typing', data);
   });
