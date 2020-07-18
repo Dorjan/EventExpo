@@ -3,14 +3,14 @@
 ## API REST:
 
 **Nota**: Guarda helpers/auth per la funzione ensureAuthenticated
-
+***
 ### index.js
   * ***GET '/'*** : home page, mostra la form di ricerca degli eventi creati nel DB dai gestori
 
   * ***GET '/welcome'*** : pagina di benvenuto che appare dopo avere fatto accedi(serve per settare WebSocket e Socket.io)
 
   * ***GET '/about'*** : pagina standard di about page
-
+***
 
 ### auth.js
   * ***GET '/login'*** : mostra i metodi per accedere(locale e oauth)
@@ -32,7 +32,7 @@
   * ***GET '/google/redirect'*** : se l'autorizzazione di google fallisce reindirizza su /login, altrimenti su /welcome
   
   * ***GET '/logout'*** : disconnette un utente dall'app e lo reindirizza su /login
-
+***
 ### eventi.js
   * ***GET '/mieiEventi'*** : mostra gli eventi a cui patecipa l'utente. Se sei un gestore mostra gli eventi creati.
 
@@ -53,7 +53,7 @@
   * ***PUT '/partecipa/:id'*** : utilizzato nella pagina dell'evento show, per unirsi ad un evento se non si è già aderito, e memorizzarlo nel DB. Tramite AMQP,avvisa il gestore che ha creato l'evento 
   
   * ***PUT '/delete/:id'*** : utilizzato nella pagina mieiEventi per abbandonare un evento a cui partecipa. Tramite AMQP avvisa il gestore che ha creato l'evento 
-
+***
 ### chat.js
   * ***GET '/chat'*** : mostra la pagina di chat
 ***
@@ -61,7 +61,7 @@
 ### Cartella Utils
 
 Contiene il file geocoder.js, nel quale è contenuto il modulo(node-geocoder) neccessario per fornire la posizione geografica del evento. Sfruttando le API di (opencage).  
-
+***
 
 ## Cartella Config 
 
