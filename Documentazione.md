@@ -118,29 +118,42 @@ Tutto è gestito dalla programmazione basata sugli eventi di Socket.io in questo
 
 * **Connessione e Scaricamento dei messaggi**
 1) Quando un utente apre la pagina "chat", invia un evento chiamato "chatstart" per richiedere la connessione.
+![chat](https://i.imgur.com/0oRQ7nB.jpg)
+(chat.js)
 
 2) Il server riceve un evento "chatstart" e apre una connessione AMQP, collega la coda denominata "chat + email" (dove "email è l'e-mail dell'utente che ha richiesto la connessione), scarica tutti i messaggi dalla coda e infine li invia al client tramite Socket.io.
-
+![server](https://i.imgur.com/IZL7IdN.jpg)
+(server.js)
 
 3) Il client riceve l'evento "chat + email" e stampa tutti i messaggi scaricati nella chat.
-
+![main](https://i.imgur.com/pXMbGMv.jpg?1)
+(main.js)
 
 * **Scambio dei messaggi**
 1) Mentre un utente scrive un messaggio, il client invia un evento di "sta scrivendo" con il suo nome al server.
+![main](https://i.imgur.com/zVwfVD1.jpg)
+(main.js)
 
 2) Il server riceve l'evento "sta scivendo" e invia un evento "sta scrivendo" a tutti gli utenti connessi tranne me.
-
+![server](https://i.imgur.com/bKkQl3S.jpg)
+(server.js)
 
 3) Il client riceve l'evento "sta scrivendo" e stampa "'nome' sta scrivendo un messaggio ...".
+![main](https://i.imgur.com/IroT2c8.jpg?1)
+(main.js)
 
 
 4) Quando un utente invia un messaggio, il client invia un evento di "chat", con il messaggio e il suo nome come parametri, al server.
-
+![main](https://i.imgur.com/LSu2ngO.jpg)
+(main.js)
 
 5) Il server riceve l'evento "chat" e invia un evento "chat" a tutti gli utenti connessi. Poi apre una connessione AMQP e invia il messaggio al "topic exchange" chiamato "chat".
-
+![server](https://i.imgur.com/BQXDh3j.jpg)
+(server.js)
 
 6) Il client riceve l'evento "chat" e stampa il messaggio ricevuto nella chat.
+![main](https://i.imgur.com/HINXPlq.jpg?1)
+(main.js)
 
 ### Servizio Notifiche
 In questo servizio utilizziamo Socket.io per consentire l'invio in tempo reale di notifiche.

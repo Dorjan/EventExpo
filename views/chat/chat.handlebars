@@ -25,7 +25,7 @@
       $(function () {
         var socket = window.io.connect('http://localhost:3000/', {transports:['websocket']});
 
-        // Send an event that activates chat message's queue and download all prev messages
+        // Manda un evento che attiva la coda della chat e scarica i messaggi precedenti
         socket.emit('chatstart', $('#email').val());
       });
 </script>
