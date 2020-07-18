@@ -71,7 +71,7 @@ Una volta collegati al sito, ci si può registrare oppure usare uno dei seguenti
 #### charles.leclerc@gmail.com -> password: monegasco (ruolo utente)
 
 Accedendo con questi account si possono testare i servizi offerti dall'app:
-Come creare eventi ed eliminare nel ruolo di gestore, mentre nel ruolo di utente si ha la possibilità di cercare e partecipare ad un evento.
+come creare eventi ed eliminare nel ruolo di gestore, mentre nel ruolo di utente si ha la possibilità di cercare e partecipare ad un evento.
 
 ***
 
