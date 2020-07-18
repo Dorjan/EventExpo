@@ -1,8 +1,8 @@
 # Documentazione
 
 ## API REST definite:
-Tutte le API Rest sono nella cartella "route", divise in 4 file js.
-Guarda helpers / auth per la funzione ensureAuthenticated
+
+Nota: Guarda helpers/auth per la funzione ensureAuthenticated
 
 ### index.js
   * ***GET '/'*** : home page, mostra la form di ricerca degli eventi creati nel DB dai gestori
