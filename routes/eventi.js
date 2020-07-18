@@ -21,12 +21,12 @@ const NodeGeocoder = require('node-geocoder');
 
 
 
-// Show Single event
+// mostra il singolo evento
 router.get('/show/:id', (req, res) => {
   Evento.findOne({
     _id: req.params.id
     })
-    .populate('creatore')     //to access creator info
+    .populate('creatore')     //per accedere alle info del creatore dell'evento
     .then(evento => {
       res.render('eventi/show', {
         evento:evento
