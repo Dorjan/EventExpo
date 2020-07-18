@@ -4,9 +4,9 @@ Lo scopo dell'applicazione
 è quello di creare, gestire e partecipare ad eventi. Gli utenti possono interagire tra di loro con una chat ed un sistema di notifiche, basato Su Socket.io ed AMQP.
 Per ulteriori informazioni, si invita a guardare la documentazione offerta.
 
-![Presentazione](https://github.com/Dorjan/EventExpo/blob/master/Presentazione_EventExpo.pdf)
+- [Presentazione](https://github.com/Dorjan/EventExpo/blob/master/Presentazione_EventExpo.pdf)
 
-![Documentazione](https://github.com/Dorjan/EventExpo/blob/master/Documentazione.md)
+- [Documentazione](https://github.com/Dorjan/EventExpo/blob/master/Documentazione.md)
 ***
 
 ### Requisiti:
