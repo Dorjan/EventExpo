@@ -191,8 +191,7 @@ router.put('/:id',(req, res) => {
       } else {
         evento.categoria = req.body.categoria;
         evento.titolo = req.body.titolo;
-        evento.descrizione = req.body.descrizione;
-        evento.venditore = req.user.id;        
+        evento.descrizione = req.body.descrizione;   
         evento.data = req.body.data;
         evento.ora = req.body.time;
         evento.immagine = req.body.immagine;
